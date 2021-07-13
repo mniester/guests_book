@@ -1,4 +1,5 @@
 import sqlite3 as sql
+from datetime import datetime
 
 
 
@@ -47,10 +48,11 @@ class DB_access:
         if not user_key:
             user_key = DB_access.add_user(user)
         cmd = f'''
-        INSERT INTO post (id, post_text, user) VALUES (:id, :post_text,:user); '''
+        INSERT INTO post (id, post_text, user, date) VALUES (:id, :post_text,:user, :date); '''
         insert = {'id': None,
                 'post_text': post_text,
-                'user': user}
+                'user': user,
+                'date': str(datetime.now())}
         result = DB_access.add_new(cmd, insert)
         return result
     
@@ -70,9 +72,10 @@ class DB_access:
     
     @staticmethod
     def get_last_posts(nr = 1, user = None):
-        cmd = f'SELECT * FROM post LIMIT {nr};'
+        cmd = f'SELECT * FROM post '
         if user:
             cmd = cmd[:-1] + f' WHERE name = {user}'
+        cmd = cmd + f' ORDER BY date DESC LIMIT {nr};'
         source = DB_access.cursor.execute(cmd)
         for s in source:
             yield s
@@ -97,6 +100,7 @@ if __name__ == '__main__':
         (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         post_text TEXT NOT NULL CHECK(length(post_text) > 1 AND length(post_text) < 1000),
         user INTEGER NOT NULL,
+        date TEXT NOT NULL CHECK (length(date) < 30),
             FOREIGN KEY(user) REFERENCES user(id));
         ''')
         user = 'user_0'
