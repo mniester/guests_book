@@ -6,7 +6,7 @@ class DB_access:
     
     @staticmethod
     def __enter__():
-        DB_access.cursor = sql.connect('/home/misza/Projekty/Rekrutacja_2/test.db')
+        DB_access.cursor = sql.connect('/home/misza/Projekty/Rekrutacja_2/app/test.db')
         return DB_access
     
     @staticmethod
@@ -86,16 +86,16 @@ if __name__ == '__main__':
 
         # I have saved and commented out table creation commands 
 
-        #db.cursor.execute('''CREATE TABLE user
-        #(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        #name TEXT NOT NULL UNIQUE CHECK(length(name) > 1 AND length(name) < 16));
-        #''')
-        #db.cursor.execute('''CREATE TABLE post
-        #(id INT NOT NULL PRIMARY KEY,
-        #post_text TEXT NOT NULL CHECK(length(post_text) > 1 AND length(post_text) < 1000),
-        #user INT NOT NULL,
-        #    FOREIGN KEY(user) REFERENCES user(id));
-        #''')
-        #user = 'user_0'
-        #db.add_user(user)
+        db.cursor.execute('''CREATE TABLE user
+        (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL UNIQUE CHECK(length(name) > 1 AND length(name) < 16));
+        ''')
+        db.cursor.execute('''CREATE TABLE post
+        (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        post_text TEXT NOT NULL CHECK(length(post_text) > 1 AND length(post_text) < 1000),
+        user INTEGER NOT NULL,
+            FOREIGN KEY(user) REFERENCES user(id));
+        ''')
+        user = 'user_0'
+        db.add_user(user)
         pass
