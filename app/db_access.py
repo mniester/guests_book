@@ -6,41 +6,73 @@ class DB_access:
     
     @staticmethod
     def __enter__():
-        DB_access.cursor = sql.connect('test.db')
+        DB_access.cursor = sql.connect('/home/misza/Projekty/Rekrutacja_2/test.db')
         return DB_access
     
     @staticmethod
-    def check_author(author):
+    def check_user(user):
+        
+        '''This method check, whether user is already in DB or not.
+        If its true, it returns their id'''
+        
         cmd = f'''
-        SELECT id FROM user WHERE name = {author}; '''
+        SELECT DISTINCT id FROM user WHERE name = "{user}"; '''
         result = DB_access.cursor.execute(cmd)
-        return result
+        result = list(result)
+        if result:
+            return result[0][0]
+        else:
+            None
     
     @staticmethod
-    def add_author(author):
+    def add_user(user):
+        
+        '''This method adds new user'''
+        
         cmd = f'''
         INSERT INTO user (id, name) VALUES (:id, :name); '''
         insert = {'id': None,
-                'name': author}
-        #try:
-        print(cmd)
-        DB_access.cursor.execute(cmd, insert)
-        DB_access.cursor.commit()
-        #except sql.OperationalError:
-        #    DB_access.cursor.rollback()
+                'name': user}
+        result = DB_access.add_new(cmd, insert)
+        return result
+    
+    @staticmethod
+    def add_post(user, post_text):
+        
+        '''This method both add posts and users
+        first check whether autor is in DB, if not it creates them.
+        Then it adds post text. It is only way to add user(user)'''
+        
+        user_key = DB_access.check_user(user)
+        if not user_key:
+            user_key = DB_access.add_user(user)
+        cmd = f'''
+        INSERT INTO post (id, post_text, user) VALUES (:id, :post_text,:user); '''
+        insert = {'id': None,
+                'post_text': post_text,
+                'user': user}
+        DB_access.add_new(cmd, insert)
+    
+    @staticmethod
+    def add_new(cmd, insert):
+        try:
+            DB_access.cursor.execute(cmd, insert)
+            DB_access.cursor.commit()
+            return True
+        except sql.IntegrityError:
+            DB_access.cursor.rollback()
             # log entry error
+            return False
     
     @staticmethod
-    def add_post(author, post_text):
-        if not DB_access.check_author:
-            DB_access.add_author(author)
-    
-    @staticmethod
-    def get_last_posts(nr = 1, author = None):
-        if author:
+    def get_last_posts(nr = 1, user = None):
+        if user:
             pass
         else:
             pass
+        user = 'Autor Testowy'
+        post_text = 'Treść Testowa'
+        return (user, post_text)
     
     @staticmethod
     def __exit__(exc_type, exc_value, exc_traceback):
@@ -49,19 +81,21 @@ class DB_access:
 
 
 
-with DB_access() as db:
+if __name__ == '__main__':
+    with DB_access() as db:
 
-    # I have saved and commented out table creation commands 
+        # I have saved and commented out table creation commands 
 
-    db.cursor.execute('''CREATE TABLE user
-    (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE CHECK(length(name) > 1 AND length(name) < 16));
-    ''')
-    db.cursor.execute('''CREATE TABLE post
-    (id INT NOT NULL PRIMARY KEY,
-    post_text TEXT NOT NULL CHECK(length(post_text) > 1 AND length(post_text) < 1000),
-    author INT NOT NULL,
-        FOREIGN KEY(author) REFERENCES user(id));
-    ''')
-    author = 'Autor Testowy'
-    db.add_author(author)
+        #db.cursor.execute('''CREATE TABLE user
+        #(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        #name TEXT NOT NULL UNIQUE CHECK(length(name) > 1 AND length(name) < 16));
+        #''')
+        #db.cursor.execute('''CREATE TABLE post
+        #(id INT NOT NULL PRIMARY KEY,
+        #post_text TEXT NOT NULL CHECK(length(post_text) > 1 AND length(post_text) < 1000),
+        #user INT NOT NULL,
+        #    FOREIGN KEY(user) REFERENCES user(id));
+        #''')
+        #user = 'user_0'
+        #db.add_user(user)
+        pass
