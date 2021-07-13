@@ -49,4 +49,7 @@ def test_add_post():
 
     with DB_access() as db:
         for post in posts:
-            db.add_post(user = user, post_text = post)     
+            db.add_post(user = user, post_text = post)
+            result = db.get_last_posts()
+            for r in result:
+                assert r[1] == 'Odpowiedni Post testowy'

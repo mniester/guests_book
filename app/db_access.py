@@ -12,7 +12,7 @@ class DB_access:
     @staticmethod
     def check_user(user):
         
-        '''This method check, whether user is already in DB or not.
+        '''Checks, whether user is already in DB or not.
         If its true, it returns their id'''
         
         cmd = f'''
@@ -27,7 +27,7 @@ class DB_access:
     @staticmethod
     def add_user(user):
         
-        '''This method adds new user'''
+        '''Adds new user'''
         
         cmd = f'''
         INSERT INTO user (id, name) VALUES (:id, :name); '''
@@ -39,7 +39,7 @@ class DB_access:
     @staticmethod
     def add_post(user, post_text):
         
-        '''This method both add posts and users
+        '''Adds posts and users
         first check whether autor is in DB, if not it creates them.
         Then it adds post text. It is only way to add user(user)'''
         
@@ -51,10 +51,14 @@ class DB_access:
         insert = {'id': None,
                 'post_text': post_text,
                 'user': user}
-        DB_access.add_new(cmd, insert)
+        result = DB_access.add_new(cmd, insert)
+        return result
     
-    @staticmethod
+    @staticmethod    
     def add_new(cmd, insert):
+        
+        '''Adds new data to base'''
+        
         try:
             DB_access.cursor.execute(cmd, insert)
             DB_access.cursor.commit()
@@ -66,13 +70,12 @@ class DB_access:
     
     @staticmethod
     def get_last_posts(nr = 1, user = None):
+        cmd = f'SELECT * FROM post LIMIT {nr};'
         if user:
-            pass
-        else:
-            pass
-        user = 'Autor Testowy'
-        post_text = 'Treść Testowa'
-        return (user, post_text)
+            cmd = cmd[:-1] + f' WHERE name = {user}'
+        source = DB_access.cursor.execute(cmd)
+        for s in source:
+            yield s
     
     @staticmethod
     def __exit__(exc_type, exc_value, exc_traceback):
