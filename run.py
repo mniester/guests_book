@@ -1,5 +1,5 @@
 from app import app
-from app.routes import *
+from app.routes import index
 
 
 

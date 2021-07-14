@@ -1,7 +1,9 @@
-import run
+import requests
 
 from app.db_access import DB_access
 from sqlite3 import OperationalError
+
+db_location = '/home/misza/Projekty/Rekrutacja_2/app/test.db'
 
 
 
@@ -73,4 +75,4 @@ def test_add_post():
             db.add_post(user = user, post_text = post)
             result = db.get_last_posts()
             for r in result:
-                assert r[1] == 'Odpowiedni Post testowy'
+                assert r[1] == 'Odpowiedni Post testowy'       

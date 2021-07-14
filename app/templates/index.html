@@ -1,9 +1,11 @@
 <!doctype html>
 <html>
     <head>
-        <title>{{ title }} - Microblog</title>
+        <title>{{ title }}</title>
     </head>
     <body>
-        <h1>Hello, {{ user.username }}!</h1>
+        <h1> { for post in posts: } </h1>
+        <div><p> {{ post }} <p><div>
+        {% endfor %}
     </body>
 </html>

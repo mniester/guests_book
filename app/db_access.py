@@ -6,7 +6,7 @@ from datetime import datetime
 class DB_access:
     
     @staticmethod
-    def __enter__():
+    def __enter__(db_location = None):
         DB_access.cursor = sql.connect('/home/misza/Projekty/Rekrutacja_2/app/test.db')
         return DB_access
     
@@ -77,7 +77,7 @@ class DB_access:
         
         '''Select posts from database'''
         
-        cmd = f'SELECT * FROM post '
+        cmd = f'SELECT post.id, post.post_text, user.name, post.date FROM post LEFT JOIN user ON post.user = user.id'
         if user:
             cmd = cmd[:-1] + f' WHERE name = {user}'
         cmd = cmd + f' ORDER BY date DESC LIMIT {nr};'
@@ -94,18 +94,18 @@ class DB_access:
 
 if __name__ == '__main__':
     with DB_access() as db:
+        pass
 
         # I have saved and commented out table creation commands 
 
-        db.cursor.execute('''CREATE TABLE user
-        (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL UNIQUE CHECK(length(name) > 1 AND length(name) < 16));
-        ''')
-        db.cursor.execute('''CREATE TABLE post
-        (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        post_text TEXT NOT NULL CHECK(length(post_text) > 1 AND length(post_text) < 1000),
-        user INTEGER NOT NULL,
-        date TEXT NOT NULL CHECK (length(date) < 30),
-            FOREIGN KEY(user) REFERENCES user(id));
-        ''')
-        user = 'user_0'
+        #db.cursor.execute('''CREATE TABLE user
+        #(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        #name TEXT NOT NULL UNIQUE CHECK(length(name) > 1 AND length(name) < 16));
+        #''')
+        #db.cursor.execute('''CREATE TABLE post
+        #(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        #post_text TEXT NOT NULL CHECK(length(post_text) > 1 AND length(post_text) < 1000),
+        #user INTEGER NOT NULL,
+        #date TEXT NOT NULL CHECK (length(date) < 30),
+        #    FOREIGN KEY(user) REFERENCES user(id));
+        #''')
