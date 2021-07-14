@@ -5,6 +5,6 @@ from app.db_access import DB_access
 @app.route('/')
 @app.route('/index')
 def index():
-    with DB_access as db:
-        posts = db.get_last_posts(nr = 10)
-        return render_template('index.html', title='Księga Gości', posts = posts)
+    with DB_access() as db:
+        posts = db.get_last_posts()
+        return render_template('index.html', posts = posts)

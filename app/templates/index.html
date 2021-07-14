@@ -4,8 +4,8 @@
         <title>{{ title }}</title>
     </head>
     <body>
-        <h1> { for post in posts: } </h1>
-        <div><p> {{ post }} <p><div>
+        <h1> {% for post in posts: %} </h1>
+        <div><p> {{ post[:-1] }} <p><div>
         {% endfor %}
     </body>
 </html>
