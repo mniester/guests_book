@@ -22,8 +22,6 @@ class DB_access:
         result = list(result)
         if result:
             return result[0][0]
-        else:
-            None
     
     @staticmethod
     def add_user(user):
@@ -72,6 +70,9 @@ class DB_access:
     
     @staticmethod
     def get_last_posts(nr = 1, user = None):
+        
+        '''Select posts from database'''
+        
         cmd = f'SELECT * FROM post '
         if user:
             cmd = cmd[:-1] + f' WHERE name = {user}'

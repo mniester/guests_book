@@ -1,5 +1,7 @@
 import run
+
 from app.db_access import DB_access
+from sqlite3 import OperationalError
 
 
 
@@ -9,6 +11,25 @@ def test_pytest():
     
     assert True
     assert not False
+
+
+
+def test_clean_db():
+    
+    '''Cleans DB to prepare it to other tests '''
+    
+    with DB_access() as db:
+        db = db.cursor
+        try:
+            db.execute('DELETE FROM user')
+            db.execute('DELETE FROM post')
+            db.execute("UPDATE sqlite_sequence SET seq = 0 WHERE name = 'user'")
+            db.execute("UPDATE sqlite_sequence SET seq = 0 WHERE name = 'post'")
+            db.commit()
+            db.execute('VACUUM')
+            assert True
+        except OperationalError:
+            assert False
 
 
 
@@ -23,7 +44,7 @@ def test_new_user():
     
     '''
 
-    users = ('', 'user_1',
+    users = ('', 'test_new_user',
             'oooooooooooooooooooooooooooooooooooooooo')
     
     with DB_access() as db:
