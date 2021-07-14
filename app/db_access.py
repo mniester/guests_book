@@ -44,12 +44,16 @@ class DB_access:
         
         user_key = DB_access.check_user(user)
         if not user_key:
-            user_key = DB_access.add_user(user)
+            result = DB_access.add_user(user)
+            if result:
+                user_key = DB_access.cursor.execute('SELECT max(id) FROM user;')
+                user_key = list(user_key)
+                user_key = user_key[0][0]
         cmd = f'''
         INSERT INTO post (id, post_text, user, date) VALUES (:id, :post_text,:user, :date); '''
         insert = {'id': None,
                 'post_text': post_text,
-                'user': user,
+                'user': user_key,
                 'date': str(datetime.now())}
         result = DB_access.add_new(cmd, insert)
         return result
@@ -105,5 +109,3 @@ if __name__ == '__main__':
             FOREIGN KEY(user) REFERENCES user(id));
         ''')
         user = 'user_0'
-        db.add_user(user)
-        pass

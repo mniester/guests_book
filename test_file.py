@@ -64,7 +64,7 @@ def test_add_post():
 
     posts = ('',
     'Odpowiedni Post testowy',
-    ('La La La La La ' * 1000))
+    ('La La La La La ' * 200))
     
     user = 'test_add_post'
 
