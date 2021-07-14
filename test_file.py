@@ -2,6 +2,7 @@ import requests
 
 from app.db_access import DB_access
 from sqlite3 import OperationalError
+from flask import Response
 
 db_location = '/home/misza/Projekty/Rekrutacja_2/app/test.db'
 
@@ -75,4 +76,51 @@ def test_add_post():
             db.add_post(user = user, post_text = post)
             result = db.get_last_posts()
             for r in result:
-                assert r[1] == 'Odpowiedni Post testowy'       
+                assert r[1] == 'Odpowiedni Post testowy'
+
+
+
+
+def posts_generator(nr = 10):
+    prefix = 'user '
+    text = str([a for a in range(100)])[1:-1]
+    for x in range(nr):
+        user = prefix + str(x)
+        yield user, text
+
+
+
+def inproper_post_generator_1(nr = 10):
+    for x in range(10):
+        yield '', 'text_ok'
+
+
+
+def inproper_post_generator_2(nr = 10):
+    for x in range(10):
+        yield 'user_ok', 'lalala' * 700
+
+
+def test_add_flask():
+    with DB_access() as db:
+        for p in posts_generator(10):
+            try:
+                post = {'user': p[0], 'text': p[1]}
+                r = requests.post('http://127.0.0.1:5000/', json = post)
+                assert r.status_code == 201
+            except ConnectionError:
+                assert False
+        for p in inproper_post_generator_1(nr = 10):
+            try:
+                post = {'user': p[0], 'text': p[1]}
+                r = requests.post('http://127.0.0.1:5000/', json = post)
+                assert r.status_code == 400
+            except ConnectionError:
+                assert False
+        for p in inproper_post_generator_2(nr = 10):
+            try:
+                post = {'user': p[0], 'text': p[1]}
+                r = requests.post('http://127.0.0.1:5000/', json = post)
+                assert r.status_code == 400
+            except ConnectionError:
+                assert False

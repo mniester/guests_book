@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1> {% for post in posts: %} </h1>
-        <div><p> {{ post[:-1] }} <p><div>
+        <div><p> {{ post[:] }} <p><div>
         {% endfor %}
     </body>
 </html>
