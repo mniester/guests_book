@@ -1,5 +1,6 @@
 import sqlite3 as sql
 from datetime import datetime
+from app.classes import Post
 
 
 
@@ -83,7 +84,8 @@ class DB_access:
         cmd = cmd + f' ORDER BY date DESC LIMIT {nr};'
         source = DB_access.cursor.execute(cmd)
         for s in source:
-            yield s
+            post = Post(s)
+            yield post
     
     @staticmethod
     def __exit__(exc_type, exc_value, exc_traceback):
@@ -99,15 +101,13 @@ if __name__ == '__main__' and new_base:
 
         # I have saved table creation commands 
 
-        if new_base:
-
-            db.cursor.execute('''CREATE TABLE user
-            (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL UNIQUE CHECK(length(name) > 1 AND length(name) < 16));
-            ''')
-            db.cursor.execute('''CREATE TABLE post
-            (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            post_text TEXT NOT NULL CHECK(length(post_text) > 1 AND length(post_text) < 1000),
-            user INTEGER NOT NULL,
-            date TEXT NOT NULL CHECK (length(date) < 30),
-            FOREIGN KEY(user) REFERENCES user(id));''')
+        db.cursor.execute('''CREATE TABLE user
+        (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL UNIQUE CHECK(length(name) > 1 AND length(name) < 16));
+        ''')
+        db.cursor.execute('''CREATE TABLE post
+        (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        post_text TEXT NOT NULL CHECK(length(post_text) > 1 AND length(post_text) < 1000),
+        user INTEGER NOT NULL,
+        date TEXT NOT NULL CHECK (length(date) < 30),
+        FOREIGN KEY(user) REFERENCES user(id));''')

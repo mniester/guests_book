@@ -76,17 +76,15 @@ def test_add_post():
             db.add_post(user = user, post_text = post)
             result = db.get_last_posts()
             for r in result:
-                assert r[1] == 'Odpowiedni Post testowy'
+                assert r.text == 'Odpowiedni Post testowy'
 
 
 
 
 def posts_generator(nr = 10):
-    prefix = 'user '
     text = str([a for a in range(100)])[1:-1]
     for x in range(nr):
-        user = prefix + str(x)
-        yield user, text
+        yield 'gen_user', text
 
 
 
