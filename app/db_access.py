@@ -86,7 +86,7 @@ class DB_access:
         if quantity:
             cmd += f'ORDER BY date DESC LIMIT {quantity} '
         cmd += ';'
-        #breakpoint()
+        print(cmd)
         source = DB_access.cursor.execute(cmd)
         for s in source:
             post = Post(s)

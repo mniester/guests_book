@@ -4,8 +4,7 @@
     <head>
         <title>{{ title }}</title>
     </head>
-    <body>
-
+    <body>         
          <form action="" method="post" novalidate>
 
             {{ form.hidden_tag() }}
@@ -21,11 +20,23 @@
         
             <p>{{ form.submit() }}</p>
          </form>
+         
+         <p>
+              {% with messages = get_flashed_messages() %}
+              {% if messages %}
+             
+             <ul class=flashes>
+                  {% for message in messages %}
+                  <p>{{ message }}<p>
+                  {% endfor %}
+             </ul>
+             {% endif %}
+             {% endwith %}
+         </p>
         
         <div> {% for post in posts: %} <div>
         <div> {{ post.user }} o {{ post.date }} napisał(a): </div>
         <div> {{ post.get_text(cut) }} </div>
-        
-        {% endfor %}
+              {% endfor %}
     </body>
 </html>
