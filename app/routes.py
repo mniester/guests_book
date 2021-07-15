@@ -1,30 +1,35 @@
 from flask import render_template, request, url_for
 from app import app
 from app.db_access import DB_access
+from app.forms import Post_form
 
 title = 'Księga Gości'
 
 
 
-@app.route('/', methods = ['POST', 'GET'])
-@app.route('/<quantity>', methods = ['POST', 'GET'])
+@app.route('/', methods = ['GET', 'POST'])
+@app.route('/<quantity>', methods = ['GET'])
 def index(quantity = 5, cut = 30):
 
     '''Returns group of latest posts (default - 5)'''
-
-    with DB_access() as db:
-        if request.method == 'GET':
-            posts = db.get_posts(quantity = quantity) 
-            status_code = 200
-        else:
-            data = request.get_json()
-            result = db.add_post(user = data['user'], post_text = data['text'])
-            posts = db.get_posts(quantity = quantity)
-            if result:
-                status_code = 201
+    data = request.data
+    print(data)
+    with app.app_context():
+        form = Post_form()
+        with DB_access() as db:
+            if request.method == 'GET':
+                posts = db.get_posts(quantity = quantity) 
+                status_code = 200
             else:
-                status_code = 400
-        return render_template('index.html', title = title, posts = posts, cut = cut), status_code
+                if form.validate_on_submit():
+                    user = form.nick.data
+                    post_text = form.text.data
+                    result = db.add_post(user = user, post_text = post_text)
+                    status_code = 201
+                else:
+                    status_code = 400
+            posts = db.get_posts(quantity = quantity)
+            return render_template('index.html', form = form, title = title, posts = posts, cut = cut), status_code
 
 
 

@@ -103,15 +103,15 @@ def test_add_post():
 
 
 def test_add_flask():
-    generators_codes = ((posts_generator, 201),
+    generators_codes = ((posts_generator, 400),
                        (inproper_post_generator_1, 400), 
                        (inproper_post_generator_2, 400))
     with DB_access() as db:
         for generator, code in generators_codes:
-            for p in generator(10):
+            for p in generator(1):
                 try:
                     post = {'user': p[0], 'text': p[1]}
-                    r = requests.post(app_adress, json = post)
+                    r = requests.post(app_adress, data = post)
                     assert r.status_code == code
                 except ConnectionError:
                     assert False
