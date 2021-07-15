@@ -50,10 +50,11 @@ def full_post(post_id = None):
     '''Returns one, chosen post'''
     
     with DB_access() as db:
-        post = list(db.get_posts(nr = post_id))
+        post = list(db.get_posts(nr = post_id))[0]
         if post:
             status_code = 200
         else:
             status_code = 204
-        return render_template('index.html', title = title, posts = post, cut = None), status_code
+        return render_template('post.html', title = title,
+        user = post.user, date = post.date, text = post.get_text(None)), status_code
 

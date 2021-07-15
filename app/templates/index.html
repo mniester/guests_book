@@ -1,11 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html>
     <head>
         <title>{{ title }}</title>
     </head>
     <body>
-        <h1> {% for post in posts: %} </h1>
-        <div> {{ post.get_excerpt(cut) }} <div>
+        <div> {% for post in posts: %} <div>
+        <div> {{ post.user }} o {{ post.date }} napisał(a): </div>
+        <div> {{ post.get_text(cut) }} </div>
         {% endfor %}
     </body>
 </html>

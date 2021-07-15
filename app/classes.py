@@ -7,17 +7,17 @@ class Post:
     def __init__(self, data):
         self.user = data[2]
         self.text = data[1]
-        self.date = data[3]
-    
-    def get_excerpt(self, nr):
-        if nr:
-            excerpt = self.text.split(' ')[:nr]
-            excerpt = ' '.join(excerpt)
-            if excerpt != self.text:
-                return excerpt + ' ...'
-            return excerpt
+        self.date = data[3][:19]
+
+    def get_text(self, cut):
+        if cut:
+            text = self.text.split(' ')[:cut]
+            text = ' '.join(text)
+            if text != self.text:
+                return text + ' ...'
+            return text
         else:
             return self.text
     
     def __repr__(self):
-        return f'Post, {self.user}, {self.date} \n {self.get_excerpt(10)}'
+        return f'Post, {self.user}, {self.date} \n {self.get_text(10)}'
