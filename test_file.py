@@ -51,7 +51,8 @@ def test_clean_db():
             db.execute("UPDATE sqlite_sequence SET seq = 0 WHERE name = 'post'")
             db.commit()
             db.execute('VACUUM')
-            assert True
+            assert list(db.execute('SELECT * FROM user;')) == []
+            assert list(db.execute('SELECT * FROM post;')) == []
         except OperationalError:
             assert False
 

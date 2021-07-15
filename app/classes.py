@@ -1,4 +1,6 @@
 class Post:
+    
+    '''Post taken from DB '''
 
     __slots__ = 'user', 'text', 'date'
     
@@ -13,3 +15,6 @@ class Post:
         if excerpt != self.text:
             return excerpt + ' ...'
         return excerpt
+    
+    def __repr__(self):
+        return f'Post, {self.user}, {self.date} \n {self.get_excerpt(10)}'
