@@ -8,4 +8,5 @@ class Post:
         self.date = data[3]
     
     def get_excerpt(self, x):
-        return self.text[:x]
+        excerpt = self.text.split(' ')[:30]
+        return excerpt
