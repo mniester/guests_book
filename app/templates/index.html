@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1> {% for post in posts: %} </h1>
-        <div> {{ post.get_excerpt(30) }} <div>
+        <div> {{ post.get_excerpt(cut) }} <div>
         {% endfor %}
     </body>
 </html>
