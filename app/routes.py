@@ -1,4 +1,4 @@
-from flask import render_template, request, url_for
+from flask import render_template, request, url_for, redirect
 from app import app
 from app.db_access import DB_access
 from app.forms import Post_form
@@ -12,8 +12,7 @@ title = 'Księga Gości'
 def index(quantity = 5, cut = 30):
 
     '''Returns group of latest posts (default - 5)'''
-    data = request.data
-    print(data)
+
     with app.app_context():
         form = Post_form()
         with DB_access() as db:
@@ -63,3 +62,17 @@ def full_post(post_id = None):
         return render_template('post.html', title = title,
         user = post.user, date = post.date, text = post.get_text(None)), status_code
 
+
+@app.route('/api', methods = ['POST'])
+def api():
+
+    '''Accepts posts as JSONs. It was added after significant changes in 'index' route
+    to preserve this capacity'''
+    
+    data = request.json
+    with DB_access() as db:
+        result = db.add_post(user = data['user'], post_text = data['text'])
+        if result:
+            return redirect(url_for('index'), 201)
+        else:
+            return redirect(url_for('index'), 400)

@@ -12,4 +12,4 @@ class Post_form(FlaskForm):
     
     nick = StringField('Użytkownik', validators = [DataRequired(), Length(min = 1, max = 20, message = nick_message)])
     text = StringField('Post', validators = [DataRequired(), Length(min = 1, max = 1000,  message = post_message)])
-    submit = SubmitField('Sign In')
+    submit = SubmitField('Zapisz')
