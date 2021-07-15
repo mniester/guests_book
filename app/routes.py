@@ -1,7 +1,7 @@
 from flask import render_template, request, url_for, redirect, abort, flash
 from app import app
 from app.db_access import DB_access
-from app.forms import Post_form
+from app.forms import Post_form, Query_form
 
 title = 'Księga Gości'
 
@@ -15,6 +15,7 @@ def index(quantity = 5, cut = 30):
 
     with app.app_context():
         form = Post_form()
+        query = Query_form()
         with DB_access() as db:
             try:
                 quantity = int(quantity)
@@ -23,7 +24,7 @@ def index(quantity = 5, cut = 30):
             if request.method == 'GET':
                 posts = db.get_posts(quantity = quantity) 
                 status_code = 200
-                flash('')
+                flash('Może coś napiszesz?')
             else:
                 if form.validate_on_submit():
                     user = form.nick.data
@@ -31,11 +32,25 @@ def index(quantity = 5, cut = 30):
                     result = db.add_post(user = user, post_text = post_text)
                     status_code = 201
                     flash('Twój wpis został dodany')
+                elif query.validate_on_submit():
+                    data = query.text.data
+                    posts = db.get_posts(query = data)
+                    posts = list(posts)
+                    if posts:
+                        status_code = 201
+                        flash('Wyniki wyszukiwania')
+                    else:
+                        status_code = 204
+                        flash('Nic nie znaleziono')
                 else:
                     status_code = 400
                     flash('Twój wpis został odrzucony')
             posts = db.get_posts(quantity = quantity)
-            return render_template('index.html', form = form, title = title, posts = posts, cut = cut), status_code
+            return render_template('index.html', form = form, 
+                                   title = title,
+                                   posts = posts,
+                                   query = query,
+                                   cut = cut), status_code
 
 
 
@@ -76,7 +91,11 @@ def full_post(post_id = None):
                     post = post[0]
                     status_code = 200
                     flash('')
-                    return render_template('post.html', title = title, user = post.user, date = post.date, text = post.text), status_code
+                    return render_template('post.html', 
+                        title = title, 
+                        user = post.user, 
+                        date = post.date, 
+                        text = post.text), status_code
                 else:
                     abort(404)
     else:

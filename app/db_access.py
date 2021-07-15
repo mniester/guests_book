@@ -74,19 +74,21 @@ class DB_access:
             return False
     
     @staticmethod
-    def get_posts(nr = None, quantity =  None, user = None):
+    def get_posts(nr = None, user = None, query = None, quantity = None):
         
         '''Select posts from database'''
         
         cmd = f'SELECT post.id, post.post_text, user.name, post.date FROM post LEFT JOIN user ON post.user = user.id '
         if nr:
             cmd += f'WHERE post.id = {nr} '
-        if user:
+        elif user:
             cmd += f'WHERE user.name = "{user}" '
+        elif query:
+            cmd += f'WHERE post.post_text LIKE "%{query}%" '
+        cmd += 'ORDER BY date DESC '
         if quantity:
-            cmd += f'ORDER BY date DESC LIMIT {quantity} '
+             cmd += f'LIMIT {quantity} '
         cmd += ';'
-        print(cmd)
         source = DB_access.cursor.execute(cmd)
         for s in source:
             post = Post(s)

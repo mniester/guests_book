@@ -2,9 +2,10 @@ class Post:
     
     '''Post taken from DB'''
 
-    __slots__ = 'user', 'text', 'date'
+    __slots__ = 'id', 'user', 'text', 'date'
     
     def __init__(self, data):
+        self.id = data[0]
         self.user = data[2]
         self.text = data[1]
         self.date = data[3][:19]
