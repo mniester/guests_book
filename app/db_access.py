@@ -80,8 +80,9 @@ class DB_access:
         
         cmd = f'SELECT post.id, post.post_text, user.name, post.date FROM post LEFT JOIN user ON post.user = user.id'
         if user:
-            cmd = cmd[:-1] + f' WHERE name = {user}'
+            cmd = cmd + f' WHERE user.name = "{user}"'
         cmd = cmd + f' ORDER BY date DESC LIMIT {nr};'
+        print(cmd)
         source = DB_access.cursor.execute(cmd)
         for s in source:
             post = Post(s)
