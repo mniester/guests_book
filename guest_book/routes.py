@@ -66,6 +66,12 @@ def user(name, quantity = default_quantity, cut = 30):
 def full_post(post_id = None):
 
     '''Returns one, chosen post'''
+    
+    try:
+        post_id = int(post_id)
+    except ValueError:
+        post_id = None
+    
     if post_id:
         with DB_access() as db:
             post = list(db.get_posts(nr = post_id))
