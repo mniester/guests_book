@@ -21,4 +21,4 @@ class Post:
             return self.text
     
     def __repr__(self):
-        return f'Post, {self.user}, {self.date} \n {self.get_text(10)}'
+        return f'Post, {self.user}, {self.date} \n {self.get_text(10)}\n\n'

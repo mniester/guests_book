@@ -1,62 +1,64 @@
 from flask import render_template, request, url_for, redirect, abort, flash
 from app import app
+from defaults import default_quantity, title
 from app.db_access import DB_access
 from app.dry import render_finish, post_method_handling
 from app.forms import Post_form, Query_form
-
-title = 'Księga Gości'
 
 
 
 @app.route('/', methods = ['GET', 'POST'])
 @app.route('/<quantity>', methods = ['GET', 'POST'])
-def index(quantity = 5, cut = 30):
+def index(quantity = default_quantity, cut = 30):
 
-    '''Returns group of latest posts (default - 5)'''
+    f'''Returns group of latest posts (default - {default_quantity})'''
 
     with app.app_context():
         post = Post_form()
         query = Query_form()
+        back = 'Odśwież'
         with DB_access() as db:
             try:
                 quantity = int(quantity)
             except ValueError:
-                 quantity = 5
+                 quantity = default_quantity
             if request.method == 'GET':
                 posts = db.get_posts(quantity = quantity) 
                 status_code = 200
-                flash('Może coś napiszesz?')
+                message = 'Może coś napiszesz?'
             else:
                 status_code, message, posts = post_method_handling(post, query, db, quantity)
-            return render_finish(post, title, query, posts, cut, status_code)
+            return render_finish(back, post, title, query, posts, cut, status_code, message, db, quantity)
 
 
 
 @app.route('/user/<name>/<quantity>', methods = ['GET', 'POST'])
 @app.route('/user/<name>', methods = ['GET', 'POST'])
-def user(name, quantity = 5, cut = 30):
+def user(name, quantity = default_quantity, cut = 30):
 
-    '''Returns group of latest posts (default - 5) of one user'''
+    f'''Returns group of latest posts (default - {default_quantity}) of one user'''
+    
     with app.app_context():
         post = Post_form()
         query = Query_form()
+        back = 'Powrót do strony głównej'
         with DB_access() as db:
             if request.method == 'GET':
                 try:
                     quantity = int(quantity)
                 except ValueError:
-                    quantity = 5
+                    quantity = default_quantity
                 posts = list(db.get_posts(quantity = quantity, user = name))
                 if posts:
                     status_code = 200
                     if len(posts) < int(quantity):
                         quantity = len(posts)
+                    message = f'Wyświetlono {quantity} wpisów użytkownika {name}'
                 else:
                     abort(404)
-                flash(f'Wyświetlono {quantity} wpisów użytkownika {name}')
             else:
                 status_code, message, posts = post_method_handling(post, query, db, quantity)
-            return render_finish(post, title, query, posts, cut, status_code)
+            return render_finish(back, post, title, query, posts, cut, status_code, message, db, quantity)
 
 
 
@@ -72,7 +74,6 @@ def full_post(post_id = None):
                 if post:
                     post = post[0]
                     status_code = 200
-                    flash('')
                     return render_template('post.html', 
                         title = title, 
                         user = post.user, 

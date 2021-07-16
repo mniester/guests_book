@@ -1,59 +1,58 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <title>{{ title }}</title>
-    </head>
-    
-    <body>
-         <p>
-              {% with messages = get_flashed_messages() %}
-              {% if messages %}
-             
-             <p class=flashes>
-                  {% for message in messages %}
-                  <p>{{ message }}<p>
-                  {% endfor %}
-             <p>
-             {% endif %}
-             {% endwith %}
-         </p>
-        
-         <div> {% for post in posts: %} <div>
-         <!-- <div><a href="/user/{{ post.user }}">{{ post.user }}</a> o {{ post.date }} napisał(a): </div>  -->
-         <div><a href="{{ url_for('user', name = post.user) }}">{{ post.user }}</a> o {{ post.date }} napisał(a): </div>
-         <div><a href="/post/{{ post.id }}">{{ post.get_text(cut) }}</a> </div>
-              {% endfor %}
-        
-                 
-         <form action="" method="post" novalidate>
+	<head>
+		<title>{{ title }}</title>
+	</head>
 
-             {{ post.hidden_tag() }}
+	<body>
+		<p><a href = "{{ url_for('index') }}"> {{ back }}</a></p>
 
-             <p>
-                 {{ post.nick.label }}<br>
-                 {{ post.nick(size=20) }}
-             </p>
-        
-             <p>
-                 {{ post.text.label }}<br>
-                 {{ post.text(size=100) }}
-             </p>
-        
-             <p>{{ post.submit() }}</p>
-         </form>
-         
-         <form action="" method="post" novalidate>
+			<div>
+				{% with messages = get_flashed_messages() %}
+				{% if messages %}
+				<p class=flashes>
+					{% for message in messages %}
+					<p>{{ message }}<p>
+					{% endfor %}
+				<p>
+				{% endif %}
+				{% endwith %}
+			</div>
+			
+			<div> {% for post in posts: %} 
+				<p><a href="{{ url_for('user', name = post.user) }}">{{ post.user }}</a> o {{ post.date }} napisał(a): </p>
+				<p><a href="/post/{{ post.id }}">{{ post.get_text(cut) }}</a></p>
+				{% endfor %}
+			</div>
 
-             {{ query.hidden_tag() }}
+			<form action="" method="post" novalidate>
+				
+				{{ post.hidden_tag() }}
+					
+					<p>
+						{{ post.nick.label }}<br>
+						{{ post.nick(size=20) }}
+					</p>
 
-             <p>
-                 {{ query.text.label }}<br>
-                 {{ query.text(size=100) }}
-             </p>
-        
-             <p>{{ query.submit() }}</p>
-         
-         </form>
+					<p>
+						{{ post.text.label }}<br>
+						{{ post.text(size=100) }}
+					</p>
+				<p>{{ post.submit() }}</p>
+
+			</form>
+
+			<form action="" method="post" novalidate>
+				
+					{{ query.hidden_tag() }}
+			
+				<p>
+					{{ query.text.label }}<br>
+					{{ query.text(size=100) }}
+				</p>
+			
+				<p>{{ query.submit() }}</p>
+			</form>
     </body>
 </html>

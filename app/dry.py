@@ -1,12 +1,17 @@
-from flask import render_template
+from flask import render_template, flash
 
 
-
-def render_finish(post, title, query, posts, cut, status_code):
+def render_finish(back, post, title, query, posts, cut, status_code, message, db, quantity):
     
     '''Ends function.'''
+    
+    flash(message)
+    
+    if not posts:
+        posts = db.get_posts(quantity = quantity)
         
-    return render_template('index.html', post = post, 
+    return render_template('index.html', back = back,
+                                   post = post, 
                                    title = title,
                                    posts = posts,
                                    query = query,
@@ -40,38 +45,25 @@ def post_method_handling(post, query, db, quantity):
     
     '''Common funtion to handle post method'''
     
-    def inner(post, query, db):
-    
-        if post.validate_on_submit():
-            result = add_post(post, db)
-            if result:
-                status_code = 201
-                message = 'Twój wpis został dodany'
-            else:
-                status_code = 205
-                message = 'Wpis nie spełnia wymagań'
-            return status_code, message
-        elif query.validate_on_submit():
-            posts = search_query(query, db)
-            if posts:
-                status_code = 201
-                message = 'Wyniki wyszukiwania'
-            else:
-                status_code = 204
-                message = 'Nic nie znaleziono'
-            return status_code, message, posts
-        return None
-    
-    result = inner(post, query, db)
-    if result:
-        try:
-            status_code, message, posts = result
-        except ValueError:
-            status_code, message = result
-            posts = db.get_posts(quantity = quantity)
-    else:
-        status_code = 400
-        message = 'Twój wpis został odrzucony'
-    return status_code, message, posts
-        #return render_finish(post, title, query, posts, cut, status_code)
+    if post.validate_on_submit():
+        result = add_post(post, db)
+        if result:
+            status_code = 201
+            message = 'Twój wpis został dodany'
+        else:
+            status_code = 205
+            message = 'Wpis nie spełnia wymagań'
+        posts = db.get_posts(quantity = quantity)
+        return status_code, message, posts
+    elif query.validate_on_submit():
+        posts = search_query(query, db)
+        if posts:
+            status_code = 201
+            message = 'Wyniki wyszukiwania'
+        else:
+            status_code = 204
+            message = 'Nic nie znaleziono'
+        print('DRY 66', status_code, message)
+        return status_code, message, posts
+    return None
     
