@@ -1,6 +1,7 @@
 from flask import render_template, request, url_for, redirect, abort, flash
 from app import app
 from app.db_access import DB_access
+from app.dry import render_finish, post_method_handling
 from app.forms import Post_form, Query_form
 
 title = 'Księga Gości'
@@ -8,13 +9,13 @@ title = 'Księga Gości'
 
 
 @app.route('/', methods = ['GET', 'POST'])
-@app.route('/<quantity>', methods = ['GET'])
+@app.route('/<quantity>', methods = ['GET', 'POST'])
 def index(quantity = 5, cut = 30):
 
     '''Returns group of latest posts (default - 5)'''
 
     with app.app_context():
-        form = Post_form()
+        post = Post_form()
         query = Query_form()
         with DB_access() as db:
             try:
@@ -26,55 +27,36 @@ def index(quantity = 5, cut = 30):
                 status_code = 200
                 flash('Może coś napiszesz?')
             else:
-                if form.validate_on_submit():
-                    user = form.nick.data
-                    post_text = form.text.data
-                    result = db.add_post(user = user, post_text = post_text)
-                    status_code = 201
-                    flash('Twój wpis został dodany')
-                elif query.validate_on_submit():
-                    data = query.text.data
-                    posts = db.get_posts(query = data)
-                    posts = list(posts)
-                    if posts:
-                        status_code = 201
-                        flash('Wyniki wyszukiwania')
-                    else:
-                        status_code = 204
-                        flash('Nic nie znaleziono')
-                else:
-                    status_code = 400
-                    flash('Twój wpis został odrzucony')
-            posts = db.get_posts(quantity = quantity)
-            return render_template('index.html', form = form, 
-                                   title = title,
-                                   posts = posts,
-                                   query = query,
-                                   cut = cut), status_code
+                status_code, message, posts = post_method_handling(post, query, db, quantity)
+            return render_finish(post, title, query, posts, cut, status_code)
 
 
 
-@app.route('/user/<name>/<quantity>')
-@app.route('/user/<name>')
+@app.route('/user/<name>/<quantity>', methods = ['GET', 'POST'])
+@app.route('/user/<name>', methods = ['GET', 'POST'])
 def user(name, quantity = 5, cut = 30):
 
     '''Returns group of latest posts (default - 5) of one user'''
     with app.app_context():
-        form = Post_form()
+        post = Post_form()
+        query = Query_form()
         with DB_access() as db:
-            try:
-                quantity = int(quantity)
-            except ValueError:
-                 quantity = 5
-            posts = list(db.get_posts(quantity = quantity, user = name))
-            if posts:
-                status_code = 200
-                if len(posts) < int(quantity):
-                    quantity = len(posts)
+            if request.method == 'GET':
+                try:
+                    quantity = int(quantity)
+                except ValueError:
+                    quantity = 5
+                posts = list(db.get_posts(quantity = quantity, user = name))
+                if posts:
+                    status_code = 200
+                    if len(posts) < int(quantity):
+                        quantity = len(posts)
+                else:
+                    abort(404)
+                flash(f'Wyświetlono {quantity} wpisów użytkownika {name}')
             else:
-                abort(404)
-            flash(f'Wyświetlono {quantity} wpisów użytkownika {name}')
-            return render_template('index.html', form = form, title = title, posts = posts, cut = cut), status_code
+                status_code, message, posts = post_method_handling(post, query, db, quantity)
+            return render_finish(post, title, query, posts, cut, status_code)
 
 
 
@@ -84,7 +66,7 @@ def full_post(post_id = None):
     '''Returns one, chosen post'''
     if post_id:
         with app.app_context():
-            form = Post_form()
+            post = Post_form()
             with DB_access() as db:
                 post = list(db.get_posts(nr = post_id))
                 if post:
@@ -103,23 +85,20 @@ def full_post(post_id = None):
 
 
 
-@app.route('/api', methods = ['GET','POST'])
+@app.route('/api', methods = ['POST'])
 def api():
 
     '''Accepts posts as JSONs. It was added after adding form in 'index' route
     to preserve this capacity'''
 
-    if request.method == 'GET':
-        abort(404)
-    else:
-        data = request.json
-        with DB_access() as db:
-            result = db.add_post(user = data['user'], post_text = data['text'])
-            if result:
-                status_code = 201
-            else:
-                status_code = 400
-            return redirect(url_for('index'), status_code)
+    data = request.json
+    with DB_access() as db:
+        result = db.add_post(user = data['user'], post_text = data['text'])
+        if result:
+            status_code = 201
+        else:
+            status_code = 400
+        return redirect(url_for('index'), status_code)
 
 
 

@@ -18,5 +18,6 @@ class Post_form(FlaskForm):
 
 class Query_form(FlaskForm):
 
-    text = StringField('Zapytanie', validators = [DataRequired(), Length(min = 1, max = 1000,  message = 'Zapytanie musi być pomiędzy %(min)d i %(max)d')])
+    message = 'Zapytanie musi być pomiędzy %(min)d i %(max)d'
+    text = StringField('Zapytanie', validators = [DataRequired(), Length(min = 1, max = 1000,  message = message)])
     submit = SubmitField('Szukaj')
