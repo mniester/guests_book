@@ -3,7 +3,7 @@ from guest_book import app
 from guest_book.defaults import default_quantity, title
 from guest_book.db_access import DB_access
 from guest_book.dry import render_finish, post_method_handling
-from guest_book.forms import Post_form, Query_form
+from guest_book.forms import Entry_form, Query_form
 
 
 
@@ -11,10 +11,10 @@ from guest_book.forms import Post_form, Query_form
 @app.route('/<quantity>', methods = ['GET', 'POST'])
 def index(quantity = default_quantity, cut = 30):
 
-    f'''Returns group of latest posts (default - {default_quantity})'''
+    f'''Returns group of latest entries (default - {default_quantity})'''
 
     with app.app_context():
-        post = Post_form()
+        entry = Entry_form()
         query = Query_form()
         back = 'Odśwież'
         with DB_access() as db:
@@ -27,8 +27,8 @@ def index(quantity = default_quantity, cut = 30):
                 status_code = 200
                 message = 'Może coś napiszesz?'
             else:
-                status_code, message, posts = post_method_handling(post, query, db, quantity)
-            return render_finish(back, post, title, query, posts, cut, status_code, message, db, quantity)
+                status_code, message, posts = post_method_handling(entry, query, db, quantity)
+            return render_finish(back, entry, title, query, posts, cut, status_code, message, db, quantity)
 
 
 
@@ -36,10 +36,10 @@ def index(quantity = default_quantity, cut = 30):
 @app.route('/user/<name>', methods = ['GET', 'POST'])
 def user(name, quantity = default_quantity, cut = 30):
 
-    f'''Returns group of latest posts (default - {default_quantity}) of one user'''
+    f'''Returns group of latest entries (default - {default_quantity}) of one user'''
     
     with app.app_context():
-        post = Post_form()
+        entry = Entry_form()
         query = Query_form()
         back = 'Powrót do strony głównej'
         with DB_access() as db:
@@ -57,8 +57,8 @@ def user(name, quantity = default_quantity, cut = 30):
                 else:
                     abort(404)
             else:
-                status_code, message, posts = post_method_handling(post, query, db, quantity)
-            return render_finish(back, post, title, query, posts, cut, status_code, message, db, quantity)
+                status_code, message, posts = post_method_handling(entry, query, db, quantity)
+            return render_finish(back, entry, title, query, posts, cut, status_code, message, db, quantity)
 
 
 
@@ -89,7 +89,7 @@ def full_post(post_id = None):
 @app.route('/api', methods = ['POST'])
 def api():
 
-    '''Accepts posts as JSONs. It was added after adding form in 'index' route
+    '''Accepts entries as JSONs. It was added after adding form in 'index' route
     to preserve this capacity'''
 
     data = request.json

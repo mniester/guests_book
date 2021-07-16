@@ -3,5 +3,6 @@
 3) after query, which does not find anything, proper flask.flash is not rendered
 4) add option to render other quantity of posts than default
 5) API received bad response*
+6) Change post form to name to not misleading (entry)
 
 *solved

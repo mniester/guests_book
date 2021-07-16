@@ -1,7 +1,7 @@
 from flask import render_template, flash
 
 
-def render_finish(back, post, title, query, posts, cut, status_code, message, db, quantity):
+def render_finish(back, entry, title, query, posts, cut, status_code, message, db, quantity):
     
     '''Ends function.'''
     
@@ -11,7 +11,7 @@ def render_finish(back, post, title, query, posts, cut, status_code, message, db
         posts = db.get_posts(quantity = quantity)
         
     return render_template('index.html', back = back,
-                                   post = post, 
+                                   entry = entry, 
                                    title = title,
                                    posts = posts,
                                    query = query,

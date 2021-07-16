@@ -28,18 +28,18 @@
 
 			<form action="" method="post" novalidate>
 				
-				{{ post.hidden_tag() }}
+				{{ entry.hidden_tag() }}
 					
 					<p>
-						{{ post.nick.label }}<br>
-						{{ post.nick(size=20) }}
+						{{ entry.nick.label }}<br>
+						{{ entry.nick}}
 					</p>
 
 					<p>
-						{{ post.text.label }}<br>
-						{{ post.text(size=100) }}
+						{{ entry.text.label }}<br>
+						{{ entry.text }}
 					</p>
-				<p>{{ post.submit() }}</p>
+				<p>{{ entry.submit() }}</p>
 
 			</form>
 
