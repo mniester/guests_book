@@ -1,6 +1,6 @@
 import sqlite3 as sql
 from datetime import datetime
-from app.classes import Post
+from guest_book.classes import Post
 
 
 
@@ -8,7 +8,7 @@ class DB_access:
     
     @staticmethod
     def __enter__(db_location = None):
-        DB_access.cursor = sql.connect('/home/misza/Projekty/Rekrutacja_2/app/test.db')
+        DB_access.cursor = sql.connect('/home/misza/Projekty/Rekrutacja_2/guest_book/test.db')
         return DB_access
     
     @staticmethod

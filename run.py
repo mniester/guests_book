@@ -1,9 +1,5 @@
-from app import app
-
-#the app does not work without import below - I don't know why
-
-from app.routes import index
-
+from guest_book import app
+#from guest_book.routes import index
 
 
 if __name__ == '__main__':

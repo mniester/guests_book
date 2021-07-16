@@ -2,6 +2,5 @@ __pycache__
 venv
 Zadanie.pdf
 workbench.py
-app/clean.db
 .flaskenv
 run_env

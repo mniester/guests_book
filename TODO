@@ -1,4 +1,7 @@
 1) the app does not work without import routes to run.py
-2) forms does not send feedback
-3) after query, whish does not find anything, proper flash is not rendered
+2) forms do not send feedback
+3) after query, which does not find anything, proper flask.flash is not rendered
 4) add option to render other quantity of posts than default
+5) API received bad response*
+
+*solved

@@ -1,6 +1,6 @@
 import requests
 
-from app.db_access import DB_access
+from guest_book.db_access import DB_access
 from sqlite3 import OperationalError
 from flask import Response
 
@@ -106,7 +106,7 @@ def test_add_flask():
     generators_codes = ((posts_generator, 201),
                        (inproper_post_generator_1, 400), 
                        (inproper_post_generator_2, 400))
-    api_adress = app_adress + '/api'
+    api_adress = app_adress + 'api'
     with DB_access() as db:
         for generator, code in generators_codes:
             for p in generator(10):

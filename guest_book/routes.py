@@ -1,9 +1,9 @@
-from flask import render_template, request, url_for, redirect, abort, flash
-from app import app
-from defaults import default_quantity, title
-from app.db_access import DB_access
-from app.dry import render_finish, post_method_handling
-from app.forms import Post_form, Query_form
+from flask import render_template, request, url_for, redirect, abort, flash, make_response
+from guest_book import app
+from guest_book.defaults import default_quantity, title
+from guest_book.db_access import DB_access
+from guest_book.dry import render_finish, post_method_handling
+from guest_book.forms import Post_form, Query_form
 
 
 
@@ -96,10 +96,11 @@ def api():
     with DB_access() as db:
         result = db.add_post(user = data['user'], post_text = data['text'])
         if result:
-            status_code = 201
+            status_code = '201'
         else:
-            status_code = 400
-        return redirect(url_for('index'), status_code)
+            status_code = '400'
+        response = make_response('', status_code)
+        return response
 
 
 
