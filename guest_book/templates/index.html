@@ -32,12 +32,18 @@
 					
 					<p>
 						{{ entry.nick.label }}<br>
-						{{ entry.nick}}
+						{{ entry.nick }}
+						{% for error in entry.nick.errors %}
+						<span style="color: red;">[{{ error }}]</span>
+						{% endfor %}
 					</p>
 
 					<p>
 						{{ entry.text.label }}<br>
 						{{ entry.text }}
+						{% for error in entry.text.errors %}
+						<span style="color: red;">[{{ error }}]</span>
+						{% endfor %}
 					</p>
 				<p>{{ entry.submit() }}</p>
 
@@ -48,8 +54,8 @@
 					{{ query.hidden_tag() }}
 			
 				<p>
-					{{ query.text.label }}<br>
-					{{ query.text(size=100) }}
+					{{ query.query.label }}<br>
+					{{ query.query(size=100) }}
 				</p>
 			
 				<p>{{ query.submit() }}</p>

@@ -34,7 +34,7 @@ def search_query(query, db):
     
     '''Query in Data Base'''
     
-    data = query.text.data
+    data = query.query.data
     posts = db.get_posts(query = data)
     posts = list(posts)
     return posts
@@ -51,10 +51,10 @@ def post_method_handling(post, query, db, quantity):
             status_code = 201
             message = 'Twój wpis został dodany'
         else:
-            status_code = 205
-            message = 'Wpis nie spełnia wymagań'
-        posts = db.get_posts(quantity = quantity)
-        return status_code, message, posts
+            pass
+            #status_code = 205
+            #message = 'Wpis nie spełnia wymagań'
+        #return status_code, message, posts
     elif query.validate_on_submit():
         posts = search_query(query, db)
         if posts:
@@ -65,5 +65,6 @@ def post_method_handling(post, query, db, quantity):
             message = 'Nic nie znaleziono'
         print('DRY 66', status_code, message)
         return status_code, message, posts
-    return None
+    posts = db.get_posts(quantity = quantity)
+    return 205, 'Wpis nie spełnia wymagań', posts
     

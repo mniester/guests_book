@@ -67,20 +67,18 @@ def full_post(post_id = None):
 
     '''Returns one, chosen post'''
     if post_id:
-        with app.app_context():
-            post = Post_form()
-            with DB_access() as db:
-                post = list(db.get_posts(nr = post_id))
-                if post:
-                    post = post[0]
-                    status_code = 200
-                    return render_template('post.html', 
-                        title = title, 
-                        user = post.user, 
-                        date = post.date, 
-                        text = post.text), status_code
-                else:
-                    abort(404)
+        with DB_access() as db:
+            post = list(db.get_posts(nr = post_id))
+            if post:
+                post = post[0]
+                status_code = 200
+                return render_template('post.html', 
+                    title = title, 
+                    user = post.user, 
+                    date = post.date, 
+                    text = post.text), status_code
+            else:
+                abort(404)
     else:
         abort(404)
 
