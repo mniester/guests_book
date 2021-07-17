@@ -14,7 +14,7 @@ app_adress = 'http://127.0.0.1:5000/'
 
 def entries_generator(nr = 10, user = None, entry = None):
     if not user:
-        user = 'user'
+        user = 'test_user'
     if not entry:
         entry = str([a for a in range(100)])[1:-1]
     for x in range(nr):
@@ -114,10 +114,3 @@ def test_api():
 #{'nick': 'www', 'text': 'www', 'write': True,
 # 'csrf_token': 'IjJlMzAwNjY0NDQyNzJhOTAzOGVmMzc2MjU3MjJjYzdlMDdmNmFhZGMi.YPM0kw.FhlgaUpUTsIYZIFzBsuf0HFRnW8'}
 
-
-
-def test_entry_form():
-    with DB_access() as db:
-        for generator, code in generators_codes:
-            for entry in generator:
-                new_form = Form()

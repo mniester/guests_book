@@ -7,10 +7,8 @@
 	</head>
 
 	<body>
-		
 		<p><a href = "{{ url_for('index') }}"> Powrót </a></p>
-		
-		<div> {{ user }} o {{ date }} napisał(a): </div>
+		<div><a href = "{{ url_for('user', name = user) }}"> {{ user }}</a>  o {{ date }} napisał(a): </div>
 		<p> {{ text }} </p>
 	</body>
 </html>
