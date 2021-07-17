@@ -1,6 +1,6 @@
-class Post:
+class Entry:
     
-    '''Post taken from DB'''
+    '''Entry taken from DB'''
 
     __slots__ = 'id', 'user', 'text', 'date'
     
@@ -21,4 +21,4 @@ class Post:
             return self.text
     
     def __repr__(self):
-        return f'Post, {self.user}, {self.date} \n {self.get_text(10)}\n\n'
+        return f'Entry, {self.user}, {self.date} \n {self.get_text(10)}\n\n'

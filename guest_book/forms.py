@@ -4,7 +4,7 @@ from wtforms.validators import Length
 
 
 
-class Entry_form(FlaskForm):
+class Entry(FlaskForm):
 
     length_message = ' musi być pomiędzy %(min)d i %(max)d'
     nick_message = 'Długość nicku' + length_message
@@ -16,7 +16,7 @@ class Entry_form(FlaskForm):
 
 
 
-class Query_form(FlaskForm):
+class Query(FlaskForm):
 
     message = 'Zapytanie musi być pomiędzy %(min)d i %(max)d'
 

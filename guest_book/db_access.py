@@ -1,6 +1,6 @@
 import sqlite3 as sql
 from datetime import datetime
-from guest_book.classes import Post
+from guest_book.classes import Entry
 
 
 
@@ -37,11 +37,11 @@ class DB_access:
         return result
     
     @staticmethod
-    def add_post(user, post_text):
+    def add_entry(user, entry_text):
         
-        '''Adds posts and users
+        '''Adds entries and users
         first check whether autor is in DB, if not it creates them.
-        Then it adds post text. It is only way to add user(user)'''
+        Then it adds entry text. It is only way to add user(user)'''
         
         user_key = DB_access.check_user(user)
         if not user_key:
@@ -51,9 +51,9 @@ class DB_access:
                 user_key = list(user_key)
                 user_key = user_key[0][0]
         cmd = f'''
-        INSERT INTO post (id, post_text, user, date) VALUES (:id, :post_text,:user, :date); '''
+        INSERT INTO entry (id, entry, user, date) VALUES (:id, :entry,:user, :date); '''
         insert = {'id': None,
-                'post_text': post_text,
+                'entry': entry_text,
                 'user': user_key,
                 'date': str(datetime.now())}
         result = DB_access.add_new(cmd, insert)
@@ -74,25 +74,25 @@ class DB_access:
             return False
     
     @staticmethod
-    def get_posts(nr = None, user = None, query = None, quantity = None):
+    def get_entries(nr = None, user = None, query = None, quantity = None):
         
-        '''Select posts from database'''
+        '''Select entries from database'''
         
-        cmd = f'SELECT post.id, post.post_text, user.name, post.date FROM post LEFT JOIN user ON post.user = user.id '
+        cmd = f'SELECT entry.id, entry.entry, user.name, entry.date FROM entry LEFT JOIN user ON entry.user = user.id '
         if nr:
-            cmd += f'WHERE post.id = {nr} '
+            cmd += f'WHERE entry.id = {nr} '
         elif user:
             cmd += f'WHERE user.name = "{user}" '
         elif query:
-            cmd += f'WHERE post.post_text LIKE "%{query}%" '
+            cmd += f'WHERE entry.entry LIKE "%{query}%" '
         cmd += 'ORDER BY date DESC '
         if quantity:
              cmd += f'LIMIT {quantity} '
         cmd += ';'
         source = DB_access.cursor.execute(cmd)
         for s in source:
-            post = Post(s)
-            yield post
+            entry = Entry(s)
+            yield entry
     
     @staticmethod
     def __exit__(exc_type, exc_value, exc_traceback):

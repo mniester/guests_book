@@ -3,6 +3,7 @@ import requests
 from guest_book.db_access import DB_access
 from sqlite3 import OperationalError
 from flask import Response
+from guest_book.forms import Entry, Query
 
 
 
@@ -10,20 +11,20 @@ app_adress = 'http://127.0.0.1:5000/'
 
 
 
-def posts_generator(nr = 10):
+def entries_generator(nr = 10):
     text = str([a for a in range(100)])[1:-1]
     for x in range(nr):
         yield 'gen_user', text
 
 
 
-def inproper_post_generator_1(nr = 10):
+def inproper_entry_generator_1(nr = 10):
     for x in range(10):
         yield '', 'text_ok'
 
 
 
-def inproper_post_generator_2(nr = 10):
+def inproper_entry_generator_2(nr = 10):
     for x in range(10):
         yield 'user_ok', 'lalala' * 700
 
@@ -46,13 +47,13 @@ def test_clean_db():
         db = db.cursor
         try:
             db.execute('DELETE FROM user')
-            db.execute('DELETE FROM post')
+            db.execute('DELETE FROM entry')
             db.execute("UPDATE sqlite_sequence SET seq = 0 WHERE name = 'user'")
-            db.execute("UPDATE sqlite_sequence SET seq = 0 WHERE name = 'post'")
+            db.execute("UPDATE sqlite_sequence SET seq = 0 WHERE name = 'entry'")
             db.commit()
             db.execute('VACUUM')
             assert list(db.execute('SELECT * FROM user;')) == []
-            assert list(db.execute('SELECT * FROM post;')) == []
+            assert list(db.execute('SELECT * FROM entry;')) == []
         except OperationalError:
             assert False
 
@@ -81,38 +82,38 @@ def test_new_user():
 
 
 
-def test_add_post():
+def test_add_entry():
 
-    '''Adds post and user, if its not in DB.
-    One post is too short, second is ok, third is too long.
+    '''Adds entry and user, if its not in DB.
+    One entry is too short, second is ok, third is too long.
     '''
 
-    posts = ('',
-    'Odpowiedni Post testowy',
+    entries = ('',
+    'Odpowiedni wpis testowy',
     ('La La La La La ' * 200))
     
-    user = 'test_add_post'
+    user = 'test_add_entry'
 
     with DB_access() as db:
-        for post in posts:
-            db.add_post(user = user, post_text = post)
-            result = db.get_posts()
+        for entry in entries:
+            db.add_entry(user = user, entry_text = entry)
+            result = db.get_entries()
             for r in result:
-                assert r.text == 'Odpowiedni Post testowy'
+                assert r.text == 'Odpowiedni wpis testowy'
 
 
 
-def test_add_flask():
-    generators_codes = ((posts_generator, 201),
-                       (inproper_post_generator_1, 400), 
-                       (inproper_post_generator_2, 400))
+def test_api():
+    generators_codes = ((entries_generator, 201),
+                       (inproper_entry_generator_1, 400), 
+                       (inproper_entry_generator_2, 400))
     api_adress = app_adress + 'api'
     with DB_access() as db:
         for generator, code in generators_codes:
             for p in generator(10):
                 try:
-                    post = {'user': p[0], 'text': p[1]}
-                    r = requests.post(api_adress, json = post)
+                    entry = {'user': p[0], 'text': p[1]}
+                    r = requests.post(api_adress, json = entry)
                     assert r.status_code == code
                 except ConnectionError:
                     assert False

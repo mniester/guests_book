@@ -20,9 +20,9 @@
 				{% endwith %}
 			</div>
 			
-			<div> {% for post in posts: %} 
-				<p><a href="{{ url_for('user', name = post.user) }}">{{ post.user }}</a> o {{ post.date }} napisał(a): </p>
-				<p><a href="/post/{{ post.id }}">{{ post.get_text(cut) }}</a></p>
+			<div> {% for entry in entries: %} 
+				<p><a href="{{ url_for('user', name = entry.user) }}">{{ entry.user }}</a> o {{ entry.date }} napisał(a): </p>
+				<p><a href="/entry/{{ entry.id }}">{{ entry.get_text(cut) }}</a></p>
 				{% endfor %}
 			</div>
 

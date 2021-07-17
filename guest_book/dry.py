@@ -1,10 +1,10 @@
-def add_post(post, db):
+def add_entry(entry, db):
     
-    '''Adds new post'''
+    '''Adds new entry'''
     
-    user = post.nick.data
-    post_text = post.text.data
-    result = db.add_post(user = user, post_text = post_text)
+    user = entry.nick.data
+    entry_text = entry.text.data
+    result = db.add_entry(user = user, entry_text = entry_text)
     return result
 
 
@@ -14,30 +14,30 @@ def search_query(query, db):
     '''Query in Data Base'''
     
     data = query.query.data
-    posts = db.get_posts(query = data)
-    posts = list(posts)
-    return posts
+    entries = db.get_entries(query = data)
+    entries = list(entries)
+    return entries
 
 
 
 def post_method_handling(entry, query, db, quantity):
     
-    '''Common funtion to handle post method'''
+    '''Common funtion to handle entry method'''
     
     if entry.write.data and entry.validate():
-        result = add_post(entry, db)
+        result = add_entry(entry, db)
         if result:
             status_code = 201
             message = 'Twój wpis został dodany'
     elif query.ask.data and query.validate():
-        posts = search_query(query, db)
-        if posts:
+        entries = search_query(query, db)
+        if entries:
             status_code = 201
             message = 'Wyniki wyszukiwania'
         else:
             status_code = 204
             message = 'Nic nie znaleziono'
-        return status_code, message, posts
-    posts = db.get_posts(quantity = quantity)
-    return 400, 'Wpis nie spełnia wymagań', posts
+        return status_code, message, entries
+    entries = db.get_entries(quantity = quantity)
+    return 400, 'Wpis nie spełnia wymagań', entries
     
