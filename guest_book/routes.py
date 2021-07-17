@@ -1,64 +1,75 @@
 from flask import render_template, request, url_for, redirect, abort, flash, make_response
 from guest_book import app
-from guest_book.defaults import default_quantity, title
+from guest_book.defaults import default_quantity, title, default_cut
 from guest_book.db_access import DB_access
-from guest_book.dry import render_finish, post_method_handling
+from guest_book.dry import post_method_handling
 from guest_book.forms import Entry_form, Query_form
 
 
 
 @app.route('/', methods = ['GET', 'POST'])
 @app.route('/<quantity>', methods = ['GET', 'POST'])
-def index(quantity = default_quantity, cut = 30):
+def index(quantity = default_quantity, cut = default_cut, entry = None, query = None):
 
     f'''Returns group of latest entries (default - {default_quantity})'''
-
-    with app.app_context():
+    
+    try:
+        quantity = int(quantity)
+    except ValueError:
+        abort(404)
+    
+    if not entry and not query:
         entry = Entry_form()
         query = Query_form()
-        back = 'Odśwież'
-        with DB_access() as db:
-            try:
-                quantity = int(quantity)
-            except ValueError:
-                 quantity = default_quantity
-            if request.method == 'GET':
-                posts = db.get_posts(quantity = quantity) 
-                status_code = 200
-                message = 'Może coś napiszesz?'
-            else:
-                status_code, message, posts = post_method_handling(entry, query, db, quantity)
-            return render_finish(back, entry, title, query, posts, cut, status_code, message, db, quantity)
+    back = 'Odśwież'
+    with DB_access() as db:
+        if request.method == 'GET':
+            status_code = 200
+            message = 'Może coś napiszesz?'
+            posts = db.get_posts(quantity = quantity)
+        else:
+            status_code, message, posts = post_method_handling(entry, query, db, quantity)
+        return render_template('index.html', back = back,
+                                   entry = entry, 
+                                   title = title,
+                                   posts = posts,
+                                   query = query,
+                                   cut = cut), status_code
+
 
 
 
 @app.route('/user/<name>/<quantity>', methods = ['GET', 'POST'])
 @app.route('/user/<name>', methods = ['GET', 'POST'])
-def user(name, quantity = default_quantity, cut = 30):
+def user(name, quantity = default_quantity, cut = default_cut, entry = None, query = None):
 
     f'''Returns group of latest entries (default - {default_quantity}) of one user'''
     
-    with app.app_context():
+    if not entry and not query:
         entry = Entry_form()
         query = Query_form()
-        back = 'Powrót do strony głównej'
-        with DB_access() as db:
-            if request.method == 'GET':
-                try:
-                    quantity = int(quantity)
-                except ValueError:
-                    quantity = default_quantity
-                posts = list(db.get_posts(quantity = quantity, user = name))
-                if posts:
-                    status_code = 200
-                    if len(posts) < int(quantity):
-                        quantity = len(posts)
-                    message = f'Wyświetlono {quantity} wpisów użytkownika {name}'
-                else:
-                    abort(404)
+    try:
+        quantity = int(quantity)
+    except ValueError:
+        quantity = default_quantity
+    back = 'Odśwież'
+    with DB_access() as db:
+        if request.method == 'GET':
+            posts = list(db.get_posts(user = name, quantity = quantity))
+            if posts:
+                message = f'Znaleziono {len(posts)} wpisów'
+                status_code = 200
             else:
-                status_code, message, posts = post_method_handling(entry, query, db, quantity)
-            return render_finish(back, entry, title, query, posts, cut, status_code, message, db, quantity)
+                message =  f'Nie znaleziono żadnego postu napisanego przez {name}'
+                status_code = 204
+        else:
+            status_code, message, posts = post_method_handling(entry, query, db, quantity)
+        return render_template('index.html', back = back,
+                                   entry = entry, 
+                                   title = title,
+                                   posts = posts,
+                                   query = query,
+                                   cut = cut), status_code
 
 
 

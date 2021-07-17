@@ -2,5 +2,6 @@ __pycache__
 venv
 Zadanie.pdf
 workbench.py
+workbench.html
 .flaskenv
 run_env
