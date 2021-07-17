@@ -4,6 +4,7 @@ from guest_book.db_access import DB_access
 from sqlite3 import OperationalError
 from flask import Response
 from guest_book.forms import Entry, Query
+from guest_book.defaults import default_quantity, default_cut
 
 
 
@@ -11,23 +12,18 @@ app_adress = 'http://127.0.0.1:5000/'
 
 
 
-def entries_generator(nr = 10):
-    text = str([a for a in range(100)])[1:-1]
+def entries_generator(nr = 10, user = None, entry = None):
+    if not user:
+        user = 'user'
+    if not entry:
+        entry = str([a for a in range(100)])[1:-1]
     for x in range(nr):
-        yield 'gen_user', text
+        yield user, entry
 
 
-
-def inproper_entry_generator_1(nr = 10):
-    for x in range(10):
-        yield '', 'text_ok'
-
-
-
-def inproper_entry_generator_2(nr = 10):
-    for x in range(10):
-        yield 'user_ok', 'lalala' * 700
-
+generators_codes = ((entries_generator(10), 201),
+                   (entries_generator(10, user ='x' * 25), 400), 
+                   (entries_generator(10, entry = 'x' * 1100), 400))
 
 
 def test_pytest():
@@ -104,16 +100,24 @@ def test_add_entry():
 
 
 def test_api():
-    generators_codes = ((entries_generator, 201),
-                       (inproper_entry_generator_1, 400), 
-                       (inproper_entry_generator_2, 400))
     api_adress = app_adress + 'api'
     with DB_access() as db:
         for generator, code in generators_codes:
-            for p in generator(10):
+            for entry in generator:
                 try:
-                    entry = {'user': p[0], 'text': p[1]}
-                    r = requests.post(api_adress, json = entry)
-                    assert r.status_code == code
+                    entry = {'user': entry[0], 'text': entry[1]}
+                    response = requests.post(api_adress, json = entry)
+                    assert response.status_code == code
                 except ConnectionError:
                     assert False
+
+#{'nick': 'www', 'text': 'www', 'write': True,
+# 'csrf_token': 'IjJlMzAwNjY0NDQyNzJhOTAzOGVmMzc2MjU3MjJjYzdlMDdmNmFhZGMi.YPM0kw.FhlgaUpUTsIYZIFzBsuf0HFRnW8'}
+
+
+
+def test_entry_form():
+    with DB_access() as db:
+        for generator, code in generators_codes:
+            for entry in generator:
+                new_form = Form()

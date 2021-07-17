@@ -9,7 +9,7 @@ from guest_book.forms import Entry, Query
 
 @app.route('/', methods = ['GET', 'POST'])
 @app.route('/<quantity>', methods = ['GET', 'POST'])
-def index(quantity = default_quantity, cut = default_cut, entry = None, query = None):
+def index(quantity = default_quantity, cut = default_cut): #, entry = None, query = None):
 
     f'''Returns group of latest entries (default - {default_quantity})'''
     
@@ -18,9 +18,10 @@ def index(quantity = default_quantity, cut = default_cut, entry = None, query = 
     except ValueError:
         abort(404)
     
-    if not entry and not query:
-        entry = Entry()
-        query = Query()
+    #if not entry and not query:
+    entry = Entry()
+    query = Query()
+    print(entry.data)
     back = 'Odśwież'
     with DB_access() as db:
         if request.method == 'GET':
@@ -41,13 +42,13 @@ def index(quantity = default_quantity, cut = default_cut, entry = None, query = 
 
 @app.route('/user/<name>/<quantity>', methods = ['GET', 'POST'])
 @app.route('/user/<name>', methods = ['GET', 'POST'])
-def user(name, quantity = default_quantity, cut = default_cut, entry = None, query = None):
+def user(name, quantity = default_quantity, cut = default_cut):# , entry = None, query = None):
 
     f'''Returns group of latest entries (default - {default_quantity}) of one user'''
     
-    if not entry and not query:
-        entry = Entry()
-        query = Query()
+    #if not entry and not query:
+    entry = Entry()
+    query = Query()
     try:
         quantity = int(quantity)
     except ValueError:
