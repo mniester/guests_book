@@ -39,5 +39,5 @@ def post_method_handling(entry, query, db, quantity):
             message = 'Nic nie znaleziono'
         return status_code, message, posts
     posts = db.get_posts(quantity = quantity)
-    return 205, 'Wpis nie spełnia wymagań', posts
+    return 400, 'Wpis nie spełnia wymagań', posts
     

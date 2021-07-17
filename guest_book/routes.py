@@ -60,8 +60,7 @@ def user(name, quantity = default_quantity, cut = default_cut, entry = None, que
                 message = f'Znaleziono {len(posts)} wpisów'
                 status_code = 200
             else:
-                message =  f'Nie znaleziono żadnego postu napisanego przez {name}'
-                status_code = 204
+                abort(404)
         else:
             status_code, message, posts = post_method_handling(entry, query, db, quantity)
         return render_template('index.html', back = back,
@@ -121,5 +120,6 @@ def api():
 
 @app.errorhandler(404)
 def page_not_found(e):
+    back = 'Powrót do strony głównej'
     flash('Nie ma takiej strony')
-    return redirect(url_for('index'), 404)
+    return render_template('error_404.html', back = back), 404

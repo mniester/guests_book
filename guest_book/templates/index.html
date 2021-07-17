@@ -58,7 +58,9 @@
 				<p>
 					{{ query.query.label }}<br>
 					{{ query.query(size=100) }}
-				</p>
+					{% for err3 in query.query.errors %}
+							<span style="color: red;"> {{ err3 }} </span>
+					{% endfor %}
 			
 				<p>{{ query.ask() }}</p>
 			</form>
