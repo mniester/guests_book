@@ -1,14 +1,19 @@
+<!DOCTYPE html>
+
 <html>
 
-	<head>
-		<title>{{ title }}</title>
-	</head>
+  <head>
+    <title>{{ title }}</title>
+  </head>
 
-	<body>
-		<div>
-			<p>Nie ma takiej strony. 
-				<a href = "{{ url_for('index') }}"> {{ back }}</a>
-			</p>
-		</div>
-	</body>
+  <body>
+
+    <div>
+      <p>{{ message }} 
+        <a href = "{{ url_for('index') }}"> {{ back }}</a>
+      </p>
+    </div>
+  
+  </body>
+ 
 </html>

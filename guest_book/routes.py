@@ -1,4 +1,4 @@
-from flask import render_template, request, url_for, redirect, abort, flash, make_response
+from flask import render_template, request, url_for, redirect, abort, make_response
 from guest_book import app
 from guest_book.defaults import default_quantity, title, default_cut
 from guest_book.db_access import DB_access
@@ -13,11 +13,6 @@ def index(quantity = default_quantity, cut = default_cut):
 
     f'''Returns group of latest entries (default - {default_quantity})'''
     
-    try:
-        quantity = int(quantity)
-    except ValueError:
-        abort(404)
-    
     entry = Entry()
     query = Query()
     back = 'Odśwież'
@@ -28,12 +23,15 @@ def index(quantity = default_quantity, cut = default_cut):
             entries = db.get_entries(quantity = quantity)
         else:
             status_code, message, entries = post_method_handling(entry, query, db, quantity)
+            if not entries:
+                entries = db.get_entries(quantity = quantity)
         return render_template('index.html', back = back,
                                    entry = entry, 
                                    title = title,
                                    entries = entries,
                                    query = query,
-                                   cut = cut), status_code
+                                   cut = cut,
+                                   message = message), status_code
 
 
 
@@ -119,5 +117,5 @@ def api():
 @app.errorhandler(404)
 def page_not_found(e):
     back = 'Powrót do strony głównej'
-    flash('Nie ma takiej strony')
-    return render_template('error_404.html', back = back), 404
+    message = 'Nie ma takiej strony'
+    return render_template('error_404.html', message = message, back = back), 404

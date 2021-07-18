@@ -29,10 +29,11 @@ def post_method_handling(entry, query, db, quantity):
         if result:
             status_code = 201
             message = 'Twój wpis został dodany'
+            return status_code, message, None
     elif query.ask.data and query.validate():
         entries = search_query(query, db)
         if entries:
-            status_code = 201
+            status_code = 200
             message = 'Wyniki wyszukiwania'
         else:
             status_code = 204

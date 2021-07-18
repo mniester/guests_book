@@ -1,68 +1,58 @@
 <!DOCTYPE html>
 
 <html>
-	<head>
-		<title>{{ title }}</title>
-	</head>
+  <head>
+    <title>{{ title }}</title>
+  </head>
 
-	<body>
-		<p><a href = "{{ url_for('index') }}"> {{ back }}</a></p>
+  <body>
 
-			<div>
-				{% with messages = get_flashed_messages() %}
-				{% if messages %}
-				<p class=flashes>
-					{% for message in messages %}
-					<p>{{ message }}<p>
-					{% endfor %}
-				<p>
-				{% endif %}
-				{% endwith %}
-			</div>
-			
-			<div> {% for entry in entries: %} 
-				<p><a href="{{ url_for('user', name = entry.user) }}">{{ entry.user }}</a> o {{ entry.date }} napisał(a): </p>
-				<p><a href="/entry/{{ entry.id }}">{{ entry.get_text(cut) }}</a></p>
-				{% endfor %}
-			</div>
+    <p><a href = "{{ url_for('index') }}"> {{ back }}</a></p>
+    
+    <div>{{ message }}</div>
+    
+    <div>
+      {% for message in messages %}
+      <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+    <div> {% for entry in entries: %} 
+      <p><a href="{{ url_for('user', name = entry.user) }}">{{ entry.user }}</a> o {{ entry.date }} napisał(a): </p>
+      <p><a href="/entry/{{ entry.id }}">{{ entry.get_text(cut) }}</a></p>
+      {% endfor %}
+    </div>
 
-			<form action="" method="post" novalidate>
-				
-				{{ entry.hidden_tag() }}
-					
-					<div><p>
-						{{ entry.nick.label }}<br>
-						{{ entry.nick }}<br>
-					</p></div>
-						<div><p>
-							{% for err1 in entry.nick.errors %}<br>
-							<span style="color: red;"> {{ err1 }} </span>
-							{% endfor %}
-						</div></p>
-					</p>
-					<p>
-						{{ entry.text.label }}<br>
-						{{ entry.text }}
-						{% for err2 in entry.text.errors %}
-							<span style="color: red;"> {{ err2 }} </span>
-						{% endfor %}
-					</p>
-				<p>{{ entry.write() }}</p>
 
-			</form>
+    <form action="" method="post" novalidate>
+      {{ entry.hidden_tag() }}
+      <div>
+        {{ entry.nick.label }}<br>
+        {{ entry.nick }}<br>
+        {% for err1 in entry.nick.errors %}<br>
+        <span style="color: red;"> {{ err1 }} </span>
+        {% endfor %}
+      </div>
+      <div>
+        {{ entry.text.label }}<br>
+        {{ entry.text }}
+        {% for err2 in entry.text.errors %}
+        <span style="color: red;"> {{ err2 }} </span>
+        {% endfor %}
+      </div>
+      <p>{{ entry.write() }}</p>
+    </form>
 
-			<form action="" method="post" novalidate>
-				
-					{{ query.hidden_tag() }}
-			
-				<p>
-					{{ query.query.label }}<br>
-					{{ query.query(size=100) }}
-					{% for err3 in query.query.errors %}
-							<span style="color: red;"> {{ err3 }} </span>
-					{% endfor %}
-			
-				<p>{{ query.ask() }}</p>
-			</form>
-		</body>
+    <form action="" method="post" novalidate>
+      {{ query.hidden_tag() }}
+      <div>
+        {{ query.query.label }}<br>
+        {{ query.query(size=100) }}
+        {% for err3 in query.query.errors %}
+        <span style="color: red;"> {{ err3 }} </span>
+        {% endfor %}
+      </div>
+      <p>{{ query.ask() }}</p>
+    </form>
+  
+  </body>
 </html>

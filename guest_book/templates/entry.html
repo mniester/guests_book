@@ -2,14 +2,16 @@
 
 
 <html>
-	<head>
-		<title>{{ title }} - post</title>
-	</head>
 
-	<body>
-		<p><a href = "{{ url_for('index') }}"> Powrót </a></p>
-		<div><a href = "{{ url_for('user', name = user) }}"> {{ user }}</a>  o {{ date }} napisał(a): </div>
-		<p> {{ text }} </p>
-	</body>
+  <head>
+    <title>{{ title }} - wpis</title>
+  </head>
+
+  <body>
+    <p><a href = "{{ url_for('index') }}"> Powrót </a></p>
+    <div><a href = "{{ url_for('user', name = user) }}"> {{ user }}</a>  o {{ date }} napisał(a): </div>
+    <p> {{ text }} </p>
+  </body>
+
 </html>
 
