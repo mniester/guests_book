@@ -4,7 +4,6 @@ import json
 from guest_book.db_access import DB_access
 from sqlite3 import OperationalError
 from flask import Response
-from guest_book.forms import Entry, Query
 
 
 

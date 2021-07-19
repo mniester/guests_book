@@ -1,6 +1,6 @@
 1) the app does not work without import routes to run.py
 2) forms do not send feedback (errors) (It was not proper request code)*
-3) flashes do not work
+3) flashes do not work* (removed aa all)
 4) add option to render other quantity of posts than default
 5) API received bad response*
 6) Change post form to not misleading name (entry)*

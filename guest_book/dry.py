@@ -13,6 +13,7 @@ def query_response(entries):
     return response
 
 
+
 def add_entry(entry, db):
     
     '''Adds new entry'''

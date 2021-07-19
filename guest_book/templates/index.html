@@ -11,6 +11,15 @@
     
     <div>{{ message }}</div>
     
+    <form action="" method="post" novalidate>
+      {{ set_quantity.hidden_tag()}}
+      <div>
+        {{ set_quantity.nr.label }}<br>
+        {{ set_quantity.nr }}<br>
+        <p>{{ set_quantity.confirm() }}</p>
+      </div>
+    </form>
+    
     <div>
       {% for message in messages %}
       <p>{{ message }}</p>

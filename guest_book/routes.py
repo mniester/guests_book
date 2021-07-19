@@ -2,7 +2,7 @@ from flask import render_template, request, url_for, redirect, abort, make_respo
 from guest_book import app
 from guest_book.db_access import DB_access
 from guest_book.dry import post_method_handling, query_response
-from guest_book.forms import Entry, Query
+from guest_book.forms import Entry, Query, Set_nr
 from guest_book import app
 
 
@@ -17,9 +17,9 @@ def index(quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
         quantity = int(quantity)
     except ValueError:
         quantity = app.config['ENTRIES']
-    
     entry = Entry()
     query = Query()
+    set_quantity = Set_nr()
     back = 'Odśwież'
     with DB_access() as db:
         if request.method == 'GET':
@@ -27,6 +27,9 @@ def index(quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
             message = 'Może coś napiszesz?'
             entries = db.get_entries(quantity = quantity)
         else:
+            if set_quantity.nr.data and set_quantity.validate():
+                quantity = set_quantity.nr.data
+                redirect(url_for('index', quantity = quantity))
             status_code, message, entries = post_method_handling(entry, query, db, quantity)
             if not entries:
                 abort(404)
@@ -36,6 +39,7 @@ def index(quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
                                    entries = entries,
                                    query = query,
                                    cut = cut,
+                                   set_quantity = set_quantity,
                                    message = message), status_code
 
 
@@ -49,6 +53,7 @@ def user(name, quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
     
     entry = Entry()
     query = Query()
+    set_quantity = Set_nr()
     back = 'Pokaż wszystkie wpisy'
     try:
         quantity = int(quantity)
@@ -63,7 +68,11 @@ def user(name, quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
             else:
                 abort(404)
         else:
+            if set_quantity.nr.data and set_quantity.validate():
+                quantity = set_quantity.nr.data
+                #redirect(url_for('user', name = user, quantity = quantity))
             status_code, message, entries = post_method_handling(entry, query, db, quantity)
+            print(message)
             if not entries:
                 abort(404)
         return render_template('index.html', back = back,
@@ -72,6 +81,7 @@ def user(name, quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
                                    entries = entries,
                                    query = query,
                                    cut = cut,
+                                   set_quantity = set_quantity,
                                    message = message), status_code
 
 

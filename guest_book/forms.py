@@ -1,6 +1,7 @@
+from guest_book import app
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import Length
+from wtforms import StringField, SubmitField, IntegerField
+from wtforms.validators import Length, NumberRange
 
 
 
@@ -22,3 +23,12 @@ class Query(FlaskForm):
 
     query = StringField('Zapytanie', validators = [Length(min = 1, max = 1000,  message = message)])
     ask = SubmitField('Szukaj')
+
+
+
+class Set_nr(FlaskForm):
+
+    message = 'Liczba musi być od 1 do 100'
+
+    nr = IntegerField('Podaj liczbę od 1 do 100', validators = [NumberRange(min = 1, max = 100,  message = message)])
+    confirm = SubmitField('Ustaw')
