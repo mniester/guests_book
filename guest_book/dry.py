@@ -37,10 +37,8 @@ def post_method_handling(entry, query, db, quantity):
             status_code = 200
             message = 'Wyniki wyszukiwania'
         else:
-            print('=============')
-            status_code = 204
-            message = 'Nic nie znaleziono'
-            print(message)
+            status_code = None
+            message = None
         return status_code, message, entries
     entries = db.get_entries(quantity = quantity)
     return 400, 'Wpis nie spełnia wymagań', entries

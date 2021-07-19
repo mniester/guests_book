@@ -28,8 +28,8 @@ def index(quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
             entries = db.get_entries(quantity = quantity)
         else:
             status_code, message, entries = post_method_handling(entry, query, db, quantity)
-            print('route 31', status_code, message, entries)
-        print(message)
+            if not entries:
+                abort(404)
         return render_template('index.html', back = back,
                                    entry = entry, 
                                    title = app.config['TITLE'],
@@ -56,7 +56,7 @@ def user(name, quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
         quantity = default_quantity
     with DB_access() as db:
         if request.method == 'GET':
-            entries = list(db.get_entries(user = name, quantity = quantity))
+            entries = list(db.get_entries(user = name))
             if entries:
                 message = f'Znaleziono {len(entries)} wpisów'
                 status_code = 200
@@ -64,7 +64,8 @@ def user(name, quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
                 abort(404)
         else:
             status_code, message, entries = post_method_handling(entry, query, db, quantity)
-            print(status_code, message, entries)
+            if not entries:
+                abort(404)
         return render_template('index.html', back = back,
                                    entry = entry, 
                                    title = app.config['TITLE'],
@@ -83,23 +84,20 @@ def full_entry(entry_id):
     try:
         entry_id = int(entry_id)
     except ValueError:
-        entry_id = None
-    
-    if entry_id:
-        with DB_access() as db:
-            entry = list(db.get_entries(nr = entry_id))
-            if entry:
-                entry = entry[0]
-                status_code = 200
-                return render_template('entry.html', 
-                    title = app.config["TITLE"], 
-                    user = entry.user, 
-                    date = entry.date, 
-                    text = entry.text), status_code
-            else:
-                abort(404)
-    else:
         abort(404)
+    
+    with DB_access() as db:
+        entry = list(db.get_entries(nr = entry_id))
+        if entry:
+            entry = entry[0]
+            status_code = 200
+            return render_template('entry.html', 
+                title = app.config["TITLE"], 
+                user = entry.user, 
+                date = entry.date, 
+                text = entry.text), status_code
+        else:
+            abort(404)
 
 
 
