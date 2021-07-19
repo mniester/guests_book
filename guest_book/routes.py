@@ -1,4 +1,4 @@
-from flask import render_template, request, url_for, redirect, abort, make_response
+from flask import render_template, request, url_for, redirect, abort, make_response, jsonify
 from guest_book import app
 from guest_book.db_access import DB_access
 from guest_book.dry import post_method_handling, query_response
@@ -109,12 +109,26 @@ def api():
 
     data = request.json
     with DB_access() as db:
-        result = db.add_entry(user = data['user'], entry_text = data['text'])
-        if result:
-            status_code = '201'
+        output = ''
+        if data['mode'] == 'in':
+            result = db.add_entry(user = data['user'], entry_text = data['text'])
+            if result:
+                status_code = '201'
+            else:
+                status_code = '400'
         else:
-            status_code = '400'
-        response = make_response('', status_code)
+            result = db.get_entries(data['quantity'])
+            if result:
+                output = {'user': [], 'date': [], 'text': []}
+                for entry in result:
+                    output['user'].append(entry.user)
+                    output['date'].append(entry.date)
+                    output['text'].append(entry.text)
+                output = jsonify(output)
+                status_code = '201'
+            else:
+                status_code = '400'
+        response = make_response(output, status_code)
         return response
 
 

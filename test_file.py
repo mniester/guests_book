@@ -1,4 +1,5 @@
 import requests
+import json
 
 from guest_book.db_access import DB_access
 from sqlite3 import OperationalError
@@ -99,14 +100,25 @@ def test_add_entry():
 
 
 def test_api():
+
+    '''Tests API route'''
+
     api_adress = app_adress + 'api'
     with DB_access() as db:
         for generator, code in generators_codes:
             for entry in generator:
                 try:
-                    entry = {'user': entry[0], 'text': entry[1]}
-                    response = requests.post(api_adress, json = entry)
+                    entry_in = {'user': entry[0], 
+                               'text': entry[1], 
+                               'mode': 'in'}
+                    response = requests.post(api_adress, json = entry_in)
                     assert response.status_code == code
+                    if code == 201:
+                        entry_out = {'user': entry_in['user'], 
+                                    'quantity': 1,
+                                    'mode': 'out'}
+                        response = requests.post(api_adress, json = entry_out)
+                        assert response.status_code == 201
                 except ConnectionError:
                     assert False
 

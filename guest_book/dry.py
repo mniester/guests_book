@@ -1,4 +1,7 @@
 def query_response(entries):
+    
+    "Returns number of found entries with proper plural forms"
+    
     found = len(entries)
     if str(found)[-1] == '1':
         end = ' wpis.'

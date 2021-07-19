@@ -1,6 +1,8 @@
 import sqlite3 as sql
+
 from datetime import datetime
 from guest_book.classes import Entry
+from guest_book import app
 
 
 
@@ -8,7 +10,7 @@ class DB_access:
     
     @staticmethod
     def __enter__():
-        DB_access.cursor = sql.connect('/home/misza/Projekty/Rekrutacja_2/guest_book/test.db')
+        DB_access.cursor = sql.connect(app.config['DB'])
         return DB_access
     
     @staticmethod
@@ -90,7 +92,6 @@ class DB_access:
              cmd += f'LIMIT {quantity} '
         cmd += ';'
         source = DB_access.cursor.execute(cmd)
-        print(cmd)
         for s in source:
             entry = Entry(s)
             yield entry
