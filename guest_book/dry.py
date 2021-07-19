@@ -1,3 +1,15 @@
+def query_response(entries):
+    found = len(entries)
+    if str(found)[-1] == '1':
+        end = ' wpis.'
+    elif str(found)[-1] in ('2','3','4'):
+        end = ' wpisy.'
+    else:
+        end = ' wpisów.'
+    response = f'Znaleziono {len(entries)}' + end
+    return response
+
+
 def add_entry(entry, db):
     
     '''Adds new entry'''
@@ -35,7 +47,7 @@ def post_method_handling(entry, query, db, quantity):
         entries = search_query(query, db, quantity)
         if entries:
             status_code = 200
-            message = 'Wyniki wyszukiwania'
+            message = query_response(entries)
         else:
             status_code = None
             message = None

@@ -1,7 +1,7 @@
 from flask import render_template, request, url_for, redirect, abort, make_response
 from guest_book import app
 from guest_book.db_access import DB_access
-from guest_book.dry import post_method_handling
+from guest_book.dry import post_method_handling, query_response
 from guest_book.forms import Entry, Query
 from guest_book import app
 
@@ -56,9 +56,9 @@ def user(name, quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
         quantity = default_quantity
     with DB_access() as db:
         if request.method == 'GET':
-            entries = list(db.get_entries(user = name))
+            entries = list(db.get_entries(user = name, quantity = quantity))
             if entries:
-                message = f'Znaleziono {len(entries)} wpisów'
+                message = query_response(entries)
                 status_code = 200
             else:
                 abort(404)
