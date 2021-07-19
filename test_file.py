@@ -13,7 +13,7 @@ app_adress = 'http://127.0.0.1:5000/'
 
 def entries_generator(nr = 10, user = None, entry = None):
     if not user:
-        user = 'test_user'
+        user = 'testuser'
     if not entry:
         entry = str([a for a in range(100)])[1:-1]
     for x in range(nr):

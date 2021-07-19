@@ -29,14 +29,14 @@ def search_query(query, db, quantity):
     
     '''Query in Data Base'''
     
-    data = query.query.data
+    data = query.entry.data
     entries = db.get_entries(query = data, quantity = quantity)
     entries = list(entries)
     return entries
 
 
 
-def post_method_handling(entry, query, db, quantity, user = None):
+def post_method_handling(entry, query, set_quantity, db, quantity, user = None):
     
     '''Common funtion to handle post method'''
     
@@ -58,8 +58,10 @@ def post_method_handling(entry, query, db, quantity, user = None):
         else:
             status_code = 404
             message = None
-    elif user:
-        entries = list(db.get_entries(quantity = quantity, user = user))        
+    elif set_quantity.nr.data:
+        if set_quantity.validate():
+            quantity = set_quantity.nr.data
+        entries = list(db.get_entries(quantity = quantity, user = user))
         if entries:
             status_code = 200
             message = query_response(entries)

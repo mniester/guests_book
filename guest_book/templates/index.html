@@ -16,6 +16,9 @@
       <div>
         {{ set_quantity.nr.label }}<br>
         {{ set_quantity.nr }}<br>
+        {% for err0 in set_quantity.nr.errors %}<br>
+        <span style="color: red;"> {{ err0 }} </span>
+        {% endfor %}
         <p>{{ set_quantity.confirm() }}</p>
       </div>
     </form>
@@ -54,13 +57,20 @@
     <form action="" method="post" novalidate>
       {{ query.hidden_tag() }}
       <div>
-        {{ query.query.label }}<br>
-        {{ query.query(size=100) }}
-        {% for err3 in query.query.errors %}
+        {{ query.entry.label }}<br>
+        {{ query.entry(size=100) }}
+        {% for err3 in query.entry.errors %}
         <span style="color: red;"> {{ err3 }} </span>
         {% endfor %}
+        <p>{{ query.ask() }}</p>
       </div>
-      <p>{{ query.ask() }}</p>
+    </form>
+
+    <form action="/user" method="get">
+      <label for="finduser">Wyszukaj użytkownika: </label><br>
+      <input type="text" id="finduser" name="name"><br>
+      <input type="submit" value="Szukaj">
+      
     </form>
   
   </body>
