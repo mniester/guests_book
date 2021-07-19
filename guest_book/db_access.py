@@ -7,7 +7,7 @@ from guest_book.classes import Entry
 class DB_access:
     
     @staticmethod
-    def __enter__(db_location = None):
+    def __enter__():
         DB_access.cursor = sql.connect('/home/misza/Projekty/Rekrutacja_2/guest_book/test.db')
         return DB_access
     
@@ -90,6 +90,7 @@ class DB_access:
              cmd += f'LIMIT {quantity} '
         cmd += ';'
         source = DB_access.cursor.execute(cmd)
+        print(cmd)
         for s in source:
             entry = Entry(s)
             yield entry

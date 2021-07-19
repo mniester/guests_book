@@ -1,17 +1,22 @@
 from flask import render_template, request, url_for, redirect, abort, make_response
 from guest_book import app
-from guest_book.defaults import default_quantity, title, default_cut
 from guest_book.db_access import DB_access
 from guest_book.dry import post_method_handling
 from guest_book.forms import Entry, Query
+from guest_book import app
 
 
 
 @app.route('/', methods = ['GET', 'POST'])
 @app.route('/<quantity>', methods = ['GET', 'POST'])
-def index(quantity = default_quantity, cut = default_cut):
+def index(quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
 
-    f'''Returns group of latest entries (default - {default_quantity})'''
+    f'''Returns group of latest entries (default - {app.config["ENTRIES"]})'''
+    
+    try:
+        quantity = int(quantity)
+    except ValueError:
+        quantity = app.config['ENTRIES']
     
     entry = Entry()
     query = Query()
@@ -23,11 +28,11 @@ def index(quantity = default_quantity, cut = default_cut):
             entries = db.get_entries(quantity = quantity)
         else:
             status_code, message, entries = post_method_handling(entry, query, db, quantity)
-            if not entries:
-                entries = db.get_entries(quantity = quantity)
+            print('route 31', status_code, message, entries)
+        print(message)
         return render_template('index.html', back = back,
                                    entry = entry, 
-                                   title = title,
+                                   title = app.config['TITLE'],
                                    entries = entries,
                                    query = query,
                                    cut = cut,
@@ -38,9 +43,9 @@ def index(quantity = default_quantity, cut = default_cut):
 
 @app.route('/user/<name>/<quantity>', methods = ['GET', 'POST'])
 @app.route('/user/<name>', methods = ['GET', 'POST'])
-def user(name, quantity = default_quantity, cut = default_cut):
+def user(name, quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
 
-    f'''Returns group of latest entries (default - {default_quantity}) of one user'''
+    f'''Returns group of latest entries (default - {app.config["ENTRIES"]}) of one user'''
     
     entry = Entry()
     query = Query()
@@ -59,12 +64,14 @@ def user(name, quantity = default_quantity, cut = default_cut):
                 abort(404)
         else:
             status_code, message, entries = post_method_handling(entry, query, db, quantity)
+            print(status_code, message, entries)
         return render_template('index.html', back = back,
                                    entry = entry, 
-                                   title = title,
+                                   title = app.config['TITLE'],
                                    entries = entries,
                                    query = query,
-                                   cut = cut), status_code
+                                   cut = cut,
+                                   message = message), status_code
 
 
 
@@ -85,7 +92,7 @@ def full_entry(entry_id):
                 entry = entry[0]
                 status_code = 200
                 return render_template('entry.html', 
-                    title = title, 
+                    title = app.config["TITLE"], 
                     user = entry.user, 
                     date = entry.date, 
                     text = entry.text), status_code

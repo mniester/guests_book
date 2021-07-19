@@ -4,7 +4,6 @@ from guest_book.db_access import DB_access
 from sqlite3 import OperationalError
 from flask import Response
 from guest_book.forms import Entry, Query
-from guest_book.defaults import default_quantity, default_cut
 
 
 
@@ -110,7 +109,4 @@ def test_api():
                     assert response.status_code == code
                 except ConnectionError:
                     assert False
-
-#{'nick': 'www', 'text': 'www', 'write': True,
-# 'csrf_token': 'IjJlMzAwNjY0NDQyNzJhOTAzOGVmMzc2MjU3MjJjYzdlMDdmNmFhZGMi.YPM0kw.FhlgaUpUTsIYZIFzBsuf0HFRnW8'}
 

@@ -9,12 +9,12 @@ def add_entry(entry, db):
 
 
 
-def search_query(query, db):
+def search_query(query, db, quantity):
     
     '''Query in Data Base'''
     
     data = query.query.data
-    entries = db.get_entries(query = data)
+    entries = db.get_entries(query = data, quantity = quantity)
     entries = list(entries)
     return entries
 
@@ -22,22 +22,25 @@ def search_query(query, db):
 
 def post_method_handling(entry, query, db, quantity):
     
-    '''Common funtion to handle entry method'''
+    '''Common funtion to handle post method'''
     
     if entry.write.data and entry.validate():
         result = add_entry(entry, db)
         if result:
             status_code = 201
             message = 'Twój wpis został dodany'
-            return status_code, message, None
+            entries = db.get_entries(quantity = quantity)
+            return status_code, message, entries
     elif query.ask.data and query.validate():
-        entries = search_query(query, db)
+        entries = search_query(query, db, quantity)
         if entries:
             status_code = 200
             message = 'Wyniki wyszukiwania'
         else:
+            print('=============')
             status_code = 204
             message = 'Nic nie znaleziono'
+            print(message)
         return status_code, message, entries
     entries = db.get_entries(quantity = quantity)
     return 400, 'Wpis nie spełnia wymagań', entries
