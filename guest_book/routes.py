@@ -29,9 +29,8 @@ def index(quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
         else:
             if set_quantity.nr.data and set_quantity.validate():
                 quantity = set_quantity.nr.data
-                redirect(url_for('index', quantity = quantity))
             status_code, message, entries = post_method_handling(entry, query, db, quantity)
-            if not entries:
+            if status_code == 404:
                 abort(404)
         return render_template('index.html', back = back,
                                    entry = entry, 
@@ -70,9 +69,7 @@ def user(name, quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
         else:
             if set_quantity.nr.data and set_quantity.validate():
                 quantity = set_quantity.nr.data
-                #redirect(url_for('user', name = user, quantity = quantity))
-            status_code, message, entries = post_method_handling(entry, query, db, quantity)
-            print(message)
+            status_code, message, entries = post_method_handling(entry, query, db, quantity, name)
             if not entries:
                 abort(404)
         return render_template('index.html', back = back,

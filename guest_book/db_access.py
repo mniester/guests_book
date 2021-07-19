@@ -91,6 +91,7 @@ class DB_access:
         if quantity:
              cmd += f'LIMIT {quantity} '
         cmd += ';'
+        print(cmd)
         source = DB_access.cursor.execute(cmd)
         for s in source:
             entry = Entry(s)

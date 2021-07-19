@@ -36,7 +36,7 @@ def search_query(query, db, quantity):
 
 
 
-def post_method_handling(entry, query, db, quantity):
+def post_method_handling(entry, query, db, quantity, user = None):
     
     '''Common funtion to handle post method'''
     
@@ -45,17 +45,30 @@ def post_method_handling(entry, query, db, quantity):
         if result:
             status_code = 201
             message = 'Twój wpis został dodany'
-            entries = db.get_entries(quantity = quantity)
-            return status_code, message, entries
+        else:
+            status_code = 201
+            message = 'Wpis jest nieprawidłowy'
+        entries = db.get_entries(quantity = quantity)
+        return status_code, message, entries
     elif query.ask.data and query.validate():
         entries = search_query(query, db, quantity)
         if entries:
             status_code = 200
             message = query_response(entries)
         else:
-            status_code = None
+            status_code = 404
             message = None
-        return status_code, message, entries
-    entries = db.get_entries(quantity = quantity)
-    return 400, 'Wpis nie spełnia wymagań', entries
+    elif user:
+        entries = list(db.get_entries(quantity = quantity, user = user))        
+        if entries:
+            status_code = 200
+            message = query_response(entries)
+        else:
+            status_code = 404
+            message = None
+    else:
+        status_code = 400
+        message = 'Wpis nie spełnia wymagań'
+        entries = db.get_entries(quantity = quantity)
+    return status_code, message, entries
     
