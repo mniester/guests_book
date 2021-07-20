@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Ubuntu", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #101010;
+  background: #f2f2f2;
+  margin-left: 25%;
+  margin-right: 25%;
+ 
+}
+
+h1 {
+  font-size: 1.2em;
+  font-family: Lucida Console, sans-serif;
+  text-align: center;
+}
+
+a:link {
+  color: 1f7a1f;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: ffff00;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+form {
+background-color: #e0e0e0;
+text-align: center;
+}
+
+

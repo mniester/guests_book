@@ -3,13 +3,20 @@
 <html>
   <head>
     <title>{{ title }}</title>
+    <meta charset="UTF-8">
+    <meta lang ='pl'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" 
+    href= "{{ url_for('static',filename='/style.css') }}">
+    <link rel="shortcut icon" type="image/jpg" 
+    href="{{ url_for('static',filename='/accessories-character-map.svg') }}">
   </head>
 
   <body>
 
     <p><a href = "{{ url_for('index') }}"> {{ back }}</a></p>
     
-    <div>{{ message }}</div>
+    <h1>{{ message }}</h1>
     
     <form action="" method="post" novalidate>
       {{ set_quantity.hidden_tag()}}
@@ -28,25 +35,25 @@
       <p>{{ message }}</p>
       {% endfor %}
     </div>
-    <div> {% for entry in entries: %} 
-      <p><a href="{{ url_for('user', name = entry.user) }}">{{ entry.user }}</a> o {{ entry.date }} napisał(a): </p>
-      <p><a href="/entry/{{ entry.id }}">{{ entry.get_text(cut) }}</a></p>
+    <dl> {% for entry in entries: %} 
+      <dt><a href="{{ url_for('user', name = entry.user) }}">{{ entry.user }}</a> o {{ entry.date }} napisał(a): </dt>
+      <dd><p></p><a href="/entry/{{ entry.id }}" target="_blank">{{ entry.get_text(cut) }}</p></a></dd>
       {% endfor %}
-    </div>
+    </dl>
 
 
     <form action="" method="post" novalidate>
       {{ entry.hidden_tag() }}
       <div>
-        {{ entry.nick.label }}<br>
-        {{ entry.nick }}<br>
-        {% for err1 in entry.nick.errors %}<br>
+        <p>{{ entry.nick.label }}</p>
+        <p>{{ entry.nick }}</p>
+        {% for err1 in entry.nick.errors %}
         <span style="color: red;"> {{ err1 }} </span>
         {% endfor %}
       </div>
       <div>
-        {{ entry.text.label }}<br>
-        {{ entry.text }}
+        <p>{{ entry.text.label }}</p>
+        <p>{{ entry.text(size=70) }}</p>
         {% for err2 in entry.text.errors %}
         <span style="color: red;"> {{ err2 }} </span>
         {% endfor %}
@@ -58,7 +65,7 @@
       {{ query.hidden_tag() }}
       <div>
         {{ query.entry.label }}<br>
-        {{ query.entry(size=100) }}
+        {{ query.entry }}
         {% for err3 in query.entry.errors %}
         <span style="color: red;"> {{ err3 }} </span>
         {% endfor %}
@@ -66,9 +73,9 @@
       </div>
     </form>
 
-    <form action="/user" method="get">
-      <label for="finduser">Wyszukaj użytkownika: </label><br>
-      <input type="text" id="finduser" name="name"><br>
+    <form action="/user/" method="get">
+      <label for="finduser">Wyszukaj użytkownika: </label>
+      <input type="text" id="finduser" name="name">
       <input type="submit" value="Szukaj">
       
     </form>

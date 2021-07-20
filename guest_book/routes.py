@@ -1,8 +1,10 @@
 from flask import render_template, request, url_for, redirect, abort, make_response, jsonify
+
+
 from guest_book import app
 from guest_book.db_access import DB_access
 from guest_book.dry import post_method_handling, query_response
-from guest_book.forms import Entry, Query, Set_nr, Find_user
+from guest_book.forms import Entry, Query, Set_nr #, Find_user
 from guest_book import app
 
 
@@ -20,12 +22,9 @@ def index(quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
     entry = Entry()
     query = Query()
     set_quantity = Set_nr()
-    find_user = Find_user()
     back = 'Odśwież'
     with DB_access() as db:
         if request.method == 'GET':
-            if find_user.data and find_user.validate():
-                redirect(url_for('user', name = find_user.data.who))
             status_code = 200
             message = 'Może coś napiszesz?'
             entries = db.get_entries(quantity = quantity)
@@ -40,42 +39,33 @@ def index(quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
                                    query = query,
                                    cut = cut,
                                    set_quantity = set_quantity,
-                                   find_user = find_user,
                                    message = message), status_code
 
 
 
-@app.route('/user?name=<name>', methods = ['GET', 'POST'])
-@app.route('/user/<name>/<quantity>', methods = ['GET', 'POST'])
 @app.route('/user/<name>', methods = ['GET', 'POST'])
-def user(name, quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
+@app.route('/user/', methods = ['GET', 'POST'])
+def user(name = None, quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
 
     f'''Returns group of latest entries (default - {app.config["ENTRIES"]}) of one user'''
     
-    name = request.form['name']
-    print(data)
     entry = Entry()
     query = Query()
     set_quantity = Set_nr()
-    find_user = Find_user()
+    if not name:
+        name = request.args.get('name')
     back = 'Pokaż wszystkie wpisy'
-    try:
-        quantity = int(quantity)
-    except ValueError:
-        quantity = default_quantity
     with DB_access() as db:
         if request.method == 'GET':
             entries = list(db.get_entries(user = name, quantity = quantity))
             if entries:
-                print('==============', name)
                 message = query_response(entries)
                 status_code = 200
             else:
-                print('--------------')
                 abort(404)
         else:
             status_code, message, entries = post_method_handling(entry, query, set_quantity, db, quantity, name)
-            if not entries:
+            if status_code == 404:
                 abort(404)
         return render_template('index.html', back = back,
                                    entry = entry, 
@@ -84,7 +74,6 @@ def user(name, quantity = app.config["ENTRIES"], cut = app.config["CUT"]):
                                    query = query,
                                    cut = cut,
                                    set_quantity = set_quantity,
-                                   find_user = find_user,
                                    message = message), status_code
 
 

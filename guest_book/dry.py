@@ -3,7 +3,7 @@ def query_response(entries):
     "Returns number of found entries with proper plural forms"
     
     found = len(entries)
-    if str(found)[-1] == '1':
+    if str(found)[-1] == '1' and not (found >= 11 and found <= 19):
         end = ' wpis.'
     elif str(found)[-1] in ('2','3','4'):
         end = ' wpisy.'

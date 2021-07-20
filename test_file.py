@@ -65,7 +65,7 @@ def test_new_user():
     
     '''
 
-    users = ('', 'test_new_user',
+    users = ('', 'newuser',
             'oooooooooooooooooooooooooooooooooooooooo')
     
     with DB_access() as db:
@@ -87,7 +87,7 @@ def test_add_entry():
     'Odpowiedni wpis testowy',
     ('La La La La La ' * 200))
     
-    user = 'test_add_entry'
+    user = 'addentry'
 
     with DB_access() as db:
         for entry in entries:
