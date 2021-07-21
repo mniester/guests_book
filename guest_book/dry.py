@@ -11,9 +11,9 @@ def query_response(entries):
     
     found = len(entries)
     if str(found)[-1] == '1' and not (found >= 11 and found <= 19):
-        end = ' wpis.'
+        end = ' wpis'
     elif str(found)[-1] in ('2','3','4'):
-        end = ' wpisy.'
+        end = ' wpisy'
     else:
         end = ' wpisów.'
     response = f'Znaleziono {len(entries)}' + end

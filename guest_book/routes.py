@@ -54,7 +54,7 @@ def user(name = None, quantity = app.config["ENTRIES"], cut = app.config["CUT"])
     set_quantity = Set_nr()
     if not name:
         name = request.args.get('name')
-    back = 'Pokaż wszystkie wpisy'
+    back = 'Pokaż wpisy wszystkich użytkowników'
     with DB_access() as db:
         if request.method == 'GET':
             entries = list(db.get_entries(user = name, quantity = quantity))
@@ -67,6 +67,7 @@ def user(name = None, quantity = app.config["ENTRIES"], cut = app.config["CUT"])
             status_code, message, entries = post_method_handling(entry, query, set_quantity, db, quantity, name)
             if status_code == 404:
                 abort(404)
+        message += f' użytkownika {name}'
         return render_template('index.html', back = back,
                                    entry = entry, 
                                    title = app.config['TITLE'],

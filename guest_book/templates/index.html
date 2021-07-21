@@ -53,7 +53,7 @@
       </div>
       <div>
         <p>{{ entry.text.label }}</p>
-        <p>{{ entry.text(size=70) }}</p>
+        <p>{{ entry.text(height=40) }}</p>
         {% for err2 in entry.text.errors %}
         <span style="color: red;"> {{ err2 }} </span>
         {% endfor %}
