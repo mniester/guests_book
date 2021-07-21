@@ -46,14 +46,14 @@
       {{ entry.hidden_tag() }}
       <div>
         <p>{{ entry.nick.label }}</p>
-        <p>{{ entry.nick }}</p>
+        <p>{{ entry.nick(placeholder=entry.nick_placeholder) }}</p>
         {% for err1 in entry.nick.errors %}
         <span style="color: red;"> {{ err1 }} </span>
         {% endfor %}
       </div>
       <div>
         <p>{{ entry.text.label }}</p>
-        <p>{{ entry.text(height=40) }}</p>
+        <p>{{ entry.text(placeholder=entry.entry_placeholder, rows = 10, cols = 50) }}</p>
         {% for err2 in entry.text.errors %}
         <span style="color: red;"> {{ err2 }} </span>
         {% endfor %}
