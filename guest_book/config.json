@@ -2,6 +2,6 @@
   "TITLE": "Ksi\u0119ga go\u015bci",
   "ENTRIES": 3,
   "CUT": 30,
-  "DB": "/home/misza/Projekty/Rekrutacja_2/guest_book/test.db",
+  "DB": "test.db",
   "SECRET_KEY": "trolololo"
 }

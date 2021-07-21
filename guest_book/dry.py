@@ -1,3 +1,10 @@
+def file_location(path):
+    cut_point = path.rindex('/')
+    location = path[:cut_point]
+    return location
+
+
+
 def query_response(entries):
     
     "Returns number of found entries with proper plural forms"

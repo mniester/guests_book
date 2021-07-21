@@ -1,8 +1,10 @@
 import sqlite3 as sql
 
+from os.path import abspath
 from datetime import datetime
 from guest_book.classes import Entry
 from guest_book import app
+from guest_book.dry import file_location
 
 
 
@@ -10,7 +12,9 @@ class DB_access:
     
     @staticmethod
     def __enter__():
-        DB_access.cursor = sql.connect(app.config['DB'])
+        location = file_location(__file__)
+        db_location = location + '/' + app.config['DB']
+        DB_access.cursor = sql.connect(db_location)
         return DB_access
     
     @staticmethod
