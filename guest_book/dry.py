@@ -15,7 +15,7 @@ def query_response(entries):
     elif str(found)[-1] in ('2','3','4'):
         end = ' wpisy'
     else:
-        end = ' wpisów.'
+        end = ' wpisów'
     response = f'Znaleziono {len(entries)}' + end
     return response
 
