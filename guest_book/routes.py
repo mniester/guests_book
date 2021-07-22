@@ -31,7 +31,11 @@ def index(quantity = None, cut = app.config["CUT"]):
             status_code, message, entries = db_operations(db, entry, query, quantity)
             if status_code == 404:
                 abort(404)
-        return render_template('index.html', back = back,
+        if entries:
+            page = 'entries.html'
+        else:
+            page = 'noentries.html'
+        return render_template(page, back = back,
                                    entry = entry, 
                                    title = app.config['TITLE'],
                                    entries = entries,
@@ -42,7 +46,8 @@ def index(quantity = None, cut = app.config["CUT"]):
 
 
 
-@app.route('/user/<name>/<quantity>', methods = ['GET', 'POST'])
+@app.route('/user/', methods = ['GET'])
+@app.route('/user/<name>/<quantity>', methods = ['GET'])
 def user(name = None, quantity = None, cut = app.config["CUT"]):
 
     f'''Returns group of latest entries (default - {app.config["ENTRIES"]}) of one user'''
@@ -58,20 +63,23 @@ def user(name = None, quantity = None, cut = app.config["CUT"]):
     print(name, quantity)
     back = 'Pokaż wpisy wszystkich użytkowników'
     with DB_access() as db:
-        if request.method == 'GET':
-            entries = list(db.get_entries(user = name, quantity = quantity))
-            if entries:
-                message = query_response(entries)
-                status_code = 200
-            else:
-                abort(404)
+        entries = list(db.get_entries(user = name, quantity = quantity))
+        if entries:
+            message = query_response(entries)
+            status_code = 200
         else:
-            status_code, message, entries = db_operations(db, entry, query, quantity, name)
-            if status_code == 404:
-                abort(404)
-            else:
-                message += f' użytkownika {name}'
-        return render_template('index.html', back = back,
+            abort(404)
+        status_code, message, entries = db_operations(db, entry, query, quantity, name)
+        print(status_code, message, entries)
+        if status_code == 404:
+            abort(404)
+        else:
+             message += f' użytkownika {name}'
+        if entries:
+            page = 'entries.html'
+        else:
+            page = 'noentries.html'
+        return render_template(page, back = back,
                                    entry = entry, 
                                    title = app.config['TITLE'],
                                    entries = entries,

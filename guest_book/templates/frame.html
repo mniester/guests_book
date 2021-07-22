@@ -31,12 +31,8 @@
       <p>{{ message }}</p>
       {% endfor %}
     </div>
-    <dl> {% for entry in entries: %} 
-      <dt><a href="{{ url_for('user', name = entry.user, quantity = quantity) }}">{{ entry.user }}</a> o {{ entry.date }} napisał(a): </dt>
-      <dd><p></p><a href="/entry/{{ entry.id }}" target="_blank">{{ entry.get_text(cut) }}</p></a></dd>
-      {% endfor %}
-    </dl>
 
+      {% block content %}{% endblock %}
 
     <form action="" method="post" novalidate>
       {{ entry.hidden_tag() }}
@@ -44,14 +40,14 @@
         <p>{{ entry.nick.label }}</p>
         <p>{{ entry.nick(placeholder=entry.nick_placeholder) }}</p>
         {% for err1 in entry.nick.errors %}
-        <span style="color: red;"> {{ err1 }} </span>
+        <span class="error"> {{ err1 }} </span>
         {% endfor %}
       </div>
       <div>
         <p>{{ entry.text.label }}</p>
         <p>{{ entry.text(placeholder=entry.entry_placeholder, rows = 10, cols = 50) }}</p>
         {% for err2 in entry.text.errors %}
-        <span style="color: red;"> {{ err2 }} </span>
+        <span class="error"> {{ err2 }} </span>
         {% endfor %}
       </div>
       <p>{{ entry.write() }}</p>
@@ -63,7 +59,7 @@
         <p>{{ query.entry.label }}</p>
         <p>{{ query.entry(placeholder=entry.entry_placeholder, rows = 10, cols = 50) }}</p>
         {% for err3 in query.entry.errors %}
-        <span style="color: red;"> {{ err3 }} </span>
+        <span class="error"> {{ err3 }} </span>
         {% endfor %}
         <p>{{ query.ask() }}</p>
       </div>

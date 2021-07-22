@@ -32,12 +32,19 @@ def add_entry(entry, db):
 
 
 
-def search_query(query, db, quantity):
+def entry_query(query, db, quantity):
     
     '''Query in Data Base'''
     
     data = query.entry.data
     entries = db.get_entries(query = data, quantity = quantity)
+    entries = list(entries)
+    return entries
+
+
+
+def user_query(db, quantity, user):
+    entries = db.get_entries(quantity = quantity, user = user)
     entries = list(entries)
     return entries
 
@@ -56,9 +63,16 @@ def db_operations(db, entry, query, quantity, user = None):
             status_code = 201
             message = 'Wpis jest nieprawidłowy'
         entries = db.get_entries(quantity = quantity)
-        return status_code, message, entries
     elif query.ask.data and query.validate():
-        entries = search_query(query, db, quantity)
+        entries = entry_query(query, db, quantity)
+        if entries:
+            status_code = 200
+            message = query_response(entries)
+        else:
+            status_code = 404
+            message = None
+    elif user:
+        entries = user_query(db, quantity, user)
         if entries:
             status_code = 200
             message = query_response(entries)
@@ -67,7 +81,7 @@ def db_operations(db, entry, query, quantity, user = None):
             message = None
     else:
         status_code = 400
-        message = 'Wpis nie spełnia wymagań'
+        message = 'Polecenie nie spełnia wymagań'
         entries = db.get_entries(quantity = quantity)
     return status_code, message, entries
     
