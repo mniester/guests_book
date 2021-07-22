@@ -28,15 +28,6 @@ class Entry(FlaskForm):
 class Query(FlaskForm):
 
 
-    entry_message = 'Zapytanie musi być pomiędzy %(min)d i %(max)d'
+    entry_message = 'Zapytanie musi mieć od %(min)d do %(max)d znaków'
     entry = StringField('Zapytanie o wpis', validators = [Length(min = 1, max = max_entry_len,  message = entry_message)], widget=TextArea())
     ask = SubmitField('Szukaj')
-
-
-
-class Set_nr(FlaskForm):
-
-
-    message = 'Liczba musi być pomiędzy %(min)d i %(max)d'
-    nr = IntegerField('Liczba wyświetlanych wpisów', validators = [NumberRange(min = 1, max = 20,  message = message)])
-    confirm = SubmitField('Ustaw')

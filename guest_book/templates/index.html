@@ -18,16 +18,12 @@
     
     <h1>{{ message }}</h1>
     
-    <form action="" method="post" novalidate>
-      {{ set_quantity.hidden_tag()}}
-      <div>
-        {{ set_quantity.nr.label }}<br>
-        {{ set_quantity.nr }}<br>
-        {% for err0 in set_quantity.nr.errors %}<br>
-        <span style="color: red;"> {{ err0 }} </span>
-        {% endfor %}
-        <p>{{ set_quantity.confirm() }}</p>
-      </div>
+    <form action="" method="get">
+      <label for="entries">Liczba wpisów (od 1 do 20)</label>
+      <input type="number" id="entries" name="quantity" size = "2"
+        min="1" max="20" value= {{ quantity }} placeholder = {{ quantity }}>
+      <span></span>
+      <input type="submit" value="Ustaw">
     </form>
     
     <div>
@@ -36,7 +32,7 @@
       {% endfor %}
     </div>
     <dl> {% for entry in entries: %} 
-      <dt><a href="{{ url_for('user', name = entry.user) }}">{{ entry.user }}</a> o {{ entry.date }} napisał(a): </dt>
+      <dt><a href="{{ url_for('user', name = entry.user, quantity = quantity) }}">{{ entry.user }}</a> o {{ entry.date }} napisał(a): </dt>
       <dd><p></p><a href="/entry/{{ entry.id }}" target="_blank">{{ entry.get_text(cut) }}</p></a></dd>
       {% endfor %}
     </dl>
@@ -64,8 +60,8 @@
     <form action="" method="post" novalidate>
       {{ query.hidden_tag() }}
       <div>
-        {{ query.entry.label }}<br>
-        {{ query.entry(placeholder=entry.entry_placeholder, rows = 10, cols = 50) }}
+        <p>{{ query.entry.label }}</p>
+        <p>{{ query.entry(placeholder=entry.entry_placeholder, rows = 10, cols = 50) }}</p>
         {% for err3 in query.entry.errors %}
         <span style="color: red;"> {{ err3 }} </span>
         {% endfor %}

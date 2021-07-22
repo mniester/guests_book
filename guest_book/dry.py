@@ -43,9 +43,9 @@ def search_query(query, db, quantity):
 
 
 
-def post_method_handling(entry, query, set_quantity, db, quantity, user = None):
+def db_operations(db, entry, query, quantity, user = None):
     
-    '''Common funtion to handle post method'''
+    '''Common funtion to handle db operations method'''
     
     if entry.write.data and entry.validate():
         result = add_entry(entry, db)
@@ -59,16 +59,6 @@ def post_method_handling(entry, query, set_quantity, db, quantity, user = None):
         return status_code, message, entries
     elif query.ask.data and query.validate():
         entries = search_query(query, db, quantity)
-        if entries:
-            status_code = 200
-            message = query_response(entries)
-        else:
-            status_code = 404
-            message = None
-    elif set_quantity.nr.data:
-        if set_quantity.validate():
-            quantity = set_quantity.nr.data
-        entries = list(db.get_entries(quantity = quantity, user = user))
         if entries:
             status_code = 200
             message = query_response(entries)
