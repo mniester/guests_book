@@ -46,7 +46,6 @@ def index(quantity = None, cut = app.config["CUT"]):
 
 
 
-@app.route('/user/', methods = ['GET'])
 @app.route('/user/<name>/<quantity>', methods = ['GET'])
 def user(name = None, quantity = None, cut = app.config["CUT"]):
 
@@ -60,7 +59,6 @@ def user(name = None, quantity = None, cut = app.config["CUT"]):
     app.config["ENTRIES"] = quantity
     if not name:
         name = request.args.get('name')
-    print(name, quantity)
     back = 'Pokaż wpisy wszystkich użytkowników'
     with DB_access() as db:
         entries = list(db.get_entries(user = name, quantity = quantity))
@@ -70,7 +68,6 @@ def user(name = None, quantity = None, cut = app.config["CUT"]):
         else:
             abort(404)
         status_code, message, entries = db_operations(db, entry, query, quantity, name)
-        print(status_code, message, entries)
         if status_code == 404:
             abort(404)
         else:
@@ -108,7 +105,8 @@ def full_entry(entry_id):
             return render_template('entry.html', 
                 title = app.config["TITLE"], 
                 user = entry.user, 
-                date = entry.date, 
+                date = entry.date,
+                quantity = app.config["ENTRIES"],
                 text = entry.text), status_code
         else:
             abort(404)
