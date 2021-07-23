@@ -88,7 +88,7 @@ class DB_access:
         if nr:
             cmd += f'WHERE entry.id = {nr} '
         elif user:
-            cmd += f'WHERE user.name = "{user}" '
+            cmd += f'WHERE user.name LIKE "%{user}%" '
         elif query:
             cmd += f'WHERE entry.entry LIKE "%{query}%" '
         cmd += 'ORDER BY date DESC '

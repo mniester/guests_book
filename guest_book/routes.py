@@ -10,7 +10,6 @@ from guest_book import app
 
 
 @app.route('/', methods = ['GET', 'POST'])
-@app.route('/<quantity>', methods = ['GET', 'POST'])
 def index(quantity = None, cut = app.config["CUT"]):
 
     f'''Returns group of latest entries (default - {app.config["ENTRIES"]})'''
@@ -18,9 +17,10 @@ def index(quantity = None, cut = app.config["CUT"]):
     entry = Entry()
     query = Query()
     quantity = request.args.get('quantity')
-    if quantity is None:
+    if quantity:
+        app.config["ENTRIES"] = quantity
+    else:
         quantity = app.config["ENTRIES"]
-    app.config["ENTRIES"] = quantity
     back = 'Odśwież'
     with DB_access() as db:
         if request.method == 'GET':
@@ -46,36 +46,33 @@ def index(quantity = None, cut = app.config["CUT"]):
 
 
 
-@app.route('/user/<name>/<quantity>', methods = ['GET'])
+@app.route('/user/', methods = ['GET'])
 def user(name = None, quantity = None, cut = app.config["CUT"]):
 
     f'''Returns group of latest entries (default - {app.config["ENTRIES"]}) of one user'''
-    
+
     entry = Entry()
     query = Query()
     quantity = request.args.get('quantity')
-    if not quantity:
+    if quantity:
+        app.config["ENTRIES"] = quantity
+    else:
         quantity = app.config["ENTRIES"]
-    app.config["ENTRIES"] = quantity
-    if not name:
-        name = request.args.get('name')
+    status_code = 200
     back = 'Pokaż wpisy wszystkich użytkowników'
+    name = request.args.get('name')
+    if name:
+        app.config['NAME'] = name
+    else:
+        name = app.config['NAME']
     with DB_access() as db:
-        entries = list(db.get_entries(user = name, quantity = quantity))
-        if entries:
-            message = query_response(entries)
-            status_code = 200
-        else:
-            abort(404)
-        status_code, message, entries = db_operations(db, entry, query, quantity, name)
-        if status_code == 404:
-            abort(404)
-        else:
-             message += f' użytkownika {name}'
+        entries = list(db.get_entries(quantity = quantity, user = name))
         if entries:
             page = 'entries.html'
+            message = f'Znaleziono {len(entries)} użytkownika {name}' 
         else:
             page = 'noentries.html'
+            message = ''
         return render_template(page, back = back,
                                    entry = entry, 
                                    title = app.config['TITLE'],
