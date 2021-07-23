@@ -17,7 +17,7 @@
   <body>
     <p><a href = "{{ url_for('index') }}"> Powrót </a></p>
     <div><a href = "{{ url_for('user', name = user, quantity = quantity) }}"> {{ user }}</a>  o {{ date }} napisał(a): </div>
-    <p> {{ text }} </p>
+    <p class = "entry"> {{ text }} </p>
   </body>
 
 </html>

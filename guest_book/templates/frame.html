@@ -34,7 +34,7 @@
 
       {% block content %}{% endblock %}
 
-    <form action="" method="post" novalidate>
+    <form action="{{ url_for('index') }}" method="post" novalidate>
       {{ entry.hidden_tag() }}
       <div>
         <p>{{ entry.nick.label }}</p>

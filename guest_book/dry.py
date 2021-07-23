@@ -5,7 +5,7 @@ def file_location(path):
 
 
 
-def query_response(entries):
+def query_response(entries, user = None):
     
     "Returns number of found entries with proper plural forms"
     
@@ -17,6 +17,8 @@ def query_response(entries):
     else:
         end = ' wpisów'
     response = f'Znaleziono {len(entries)}' + end
+    if user:
+        response += f' użytkownika {user}'
     return response
 
 
@@ -34,7 +36,7 @@ def add_entry(entry, db):
 
 def entry_query(query, db, quantity):
     
-    '''Query in Data Base'''
+    '''Query for entry in data base'''
     
     data = query.entry.data
     entries = db.get_entries(query = data, quantity = quantity)
@@ -44,6 +46,9 @@ def entry_query(query, db, quantity):
 
 
 def user_query(db, quantity, user):
+
+    '''Queru for user in data base'''
+
     entries = db.get_entries(quantity = quantity, user = user)
     entries = list(entries)
     return entries

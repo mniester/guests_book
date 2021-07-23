@@ -68,11 +68,10 @@ def user(name = None, quantity = None, cut = app.config["CUT"]):
     with DB_access() as db:
         entries = list(db.get_entries(quantity = quantity, user = name))
         if entries:
-            page = 'entries.html'
-            message = f'Znaleziono {len(entries)} użytkownika {name}' 
+            page = 'entries.html' 
         else:
             page = 'noentries.html'
-            message = ''
+        message = query_response(entries, name)
         return render_template(page, back = back,
                                    entry = entry, 
                                    title = app.config['TITLE'],
