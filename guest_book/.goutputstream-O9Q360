@@ -1,8 +1,4 @@
 def file_location(path):
-
-    '''Return location of file
-    Takes its full path as argument'''
-
     cut_point = path.rindex('/')
     location = path[:cut_point]
     return location
@@ -72,7 +68,7 @@ def db_operations(db, entry, quantity, user = None):
             status_code = 201
             message = 'Wpis jest nieprawidłowy'
         entries = db.get_entries(quantity = quantity)
-    elif entry.query.data and entry.text.validate(entry):
+    elif entry.query.data and entry.validate.text():
         entries = entry_query(entry, db, quantity)
         if entries:
             status_code = 200

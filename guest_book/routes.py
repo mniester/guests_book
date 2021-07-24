@@ -3,8 +3,8 @@ from flask import render_template, request, url_for, redirect, abort, make_respo
 
 from guest_book import app
 from guest_book.db_access import DB_access
-from guest_book.dry import db_operations, query_response
-from guest_book.forms import Entry, Query
+from guest_book.dry import db_operations, query_message
+from guest_book.forms import Entry
 from guest_book import app
 
 
@@ -15,7 +15,6 @@ def index(quantity = None, cut = app.config["CUT"]):
     f'''Returns group of latest entries (default - {app.config["ENTRIES"]})'''
     
     entry = Entry()
-    query = Query()
     quantity = request.args.get('quantity')
     if quantity:
         app.config["ENTRIES"] = quantity
@@ -28,7 +27,7 @@ def index(quantity = None, cut = app.config["CUT"]):
             message = 'Może coś napiszesz?'
             entries = db.get_entries(quantity = quantity)
         else:
-            status_code, message, entries = db_operations(db, entry, query, quantity)
+            status_code, message, entries = db_operations(db, entry, quantity)
             if status_code == 404:
                 abort(404)
         if entries:
@@ -39,7 +38,6 @@ def index(quantity = None, cut = app.config["CUT"]):
                                    entry = entry, 
                                    title = app.config['TITLE'],
                                    entries = entries,
-                                   query = query,
                                    cut = cut,
                                    quantity = quantity,
                                    message = message), status_code
@@ -52,7 +50,6 @@ def user(name = None, quantity = None, cut = app.config["CUT"]):
     f'''Returns group of latest entries (default - {app.config["ENTRIES"]}) of one user'''
 
     entry = Entry()
-    query = Query()
     quantity = request.args.get('quantity')
     if quantity:
         app.config["ENTRIES"] = quantity
@@ -64,19 +61,21 @@ def user(name = None, quantity = None, cut = app.config["CUT"]):
     if name:
         app.config['NAME'] = name
     else:
-        name = app.config['NAME']
+        try:
+            name = app.config['NAME']
+        except KeyError:
+            abort(404)
     with DB_access() as db:
         entries = list(db.get_entries(quantity = quantity, user = name))
         if entries:
             page = 'entries.html' 
         else:
             page = 'noentries.html'
-        message = query_response(entries, name)
+        message = query_message(entries, name)
         return render_template(page, back = back,
                                    entry = entry, 
                                    title = app.config['TITLE'],
                                    entries = entries,
-                                   query = query,
                                    cut = cut,
                                    quantity = quantity,
                                    message = message), status_code
@@ -112,8 +111,7 @@ def full_entry(entry_id):
 @app.route('/api', methods = ['POST'])
 def api():
 
-    '''Accepts entries as JSONs. It was added after adding form in 'index' route
-    to preserve this capacity'''
+    '''Accepts entries as JSONs.'''
 
     data = request.json
     with DB_access() as db:

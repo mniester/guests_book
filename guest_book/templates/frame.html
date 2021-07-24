@@ -50,19 +50,7 @@
         <span class="error"> {{ err2 }} </span>
         {% endfor %}
       </div>
-      <p>{{ entry.write() }}</p>
-    </form>
-
-    <form action="" method="post" novalidate>
-      {{ query.hidden_tag() }}
-      <div>
-        <p>{{ query.entry.label }}</p>
-        <p>{{ query.entry(placeholder=entry.entry_placeholder, rows = 10, cols = 50) }}</p>
-        {% for err3 in query.entry.errors %}
-        <span class="error"> {{ err3 }} </span>
-        {% endfor %}
-        <p>{{ query.ask() }}</p>
-      </div>
+      <p>{{ entry.write() }}<span>{{ entry.query() }}</span></p>
     </form>
 
     <form action="/user/" method="get">
