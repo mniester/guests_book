@@ -3,7 +3,7 @@ from flask import render_template, request, url_for, redirect, abort, make_respo
 
 from guest_book import app
 from guest_book.db_access import DB_access
-from guest_book.dry import db_operations, query_message, display_data
+from guest_book.dry import db_operations, query_message, display_data, get_max_page
 from guest_book.forms import Entry
 from guest_book import app
 
@@ -20,6 +20,7 @@ def index(quantity = None, page = 1, cut = app.config["CUT"]):
     quantity, offset = display_data(quantity, page, app)
     back = 'Odśwież'
     with DB_access() as db:
+        max_page = get_max_page(db, quantity)
         if request.method == 'GET':
             status_code = 200
             message = 'Może coś napiszesz?'
@@ -39,6 +40,7 @@ def index(quantity = None, page = 1, cut = app.config["CUT"]):
                                    cut = cut,
                                    quantity = quantity,
                                    page = page,
+                                   max_page = max_page,
                                    message = message), status_code
 
 
@@ -62,6 +64,7 @@ def user(name = None, quantity = None, page = 1, cut = app.config["CUT"]):
         except KeyError:
             abort(404)
     with DB_access() as db:
+        max_page = get_max_page(db, quantity, name)
         entries = list(db.get_entries(quantity = quantity, user = name, offset = offset))
         if entries:
             template = 'entries.html' 
@@ -76,6 +79,7 @@ def user(name = None, quantity = None, page = 1, cut = app.config["CUT"]):
                                    cut = cut,
                                    quantity = quantity,
                                    page = page,
+                                   max_page = max_page,
                                    message = message), status_code
 
 

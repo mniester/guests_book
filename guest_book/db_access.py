@@ -80,6 +80,19 @@ class DB_access:
             return False
     
     @staticmethod
+    def check_entries(user = None):
+        cmd = f'SELECT COUNT(id) FROM entry ' 
+        if user:
+            user_id = DB_access.check_user(user)
+            if user_id:
+                cmd += f'WHERE user = {user_id} '
+        cmd += ';'
+        print(cmd)
+        nr = DB_access.cursor.execute(cmd)
+        nr = list(nr)[0][0]
+        return nr
+    
+    @staticmethod
     def get_entries(nr = None, user = None, 
         query = None, quantity = None, offset = None):
         
@@ -98,7 +111,6 @@ class DB_access:
         if offset:
             cmd += f'OFFSET {offset} '
         cmd += ';'
-        print(cmd)
         source = DB_access.cursor.execute(cmd)
         for s in source:
             entry = Entry(s)

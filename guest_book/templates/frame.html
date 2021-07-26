@@ -14,7 +14,7 @@
 
   <body>
 
-    <p><a href = "{{ url_for('index', quantity = quantity) }}"> {{ back }}</a></p>
+    <p><a href = "{{ url_for('index', quantity = quantity) }}">{{ back }}</a></p>
     
     <h1>{{ message }}</h1>
     
@@ -25,7 +25,7 @@
       
       <label for="page">Nr strony</label>
       <input type="number" id="page" name="page" size = "2"
-        min="1" max="20" value= "1" placeholder = "{{ page }}">
+        min="1" max= "{{ max_page }}" value= "1" placeholder = "{{ page }}">
       <input type="submit" value="Ustaw">
     </form>
     

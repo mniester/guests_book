@@ -1,3 +1,20 @@
+def get_max_page(db, quantity, name = None):
+
+    '''Returns number of highest page to shown on main webpage'''
+
+    if name:
+        all_entries = db.check_entries(name)
+    else:
+        all_entries = db.check_entries()
+    max_page = all_entries // int(quantity)
+    if not max_page:
+        return 1
+    if all_entries % max_page:
+        return max_page + 1
+    return max_page
+
+
+
 def display_data(quantity, page, app):
 
     """Sets quantity of entries in page and which one should be shown.
@@ -8,6 +25,8 @@ def display_data(quantity, page, app):
         app.config["ENTRIES"] = quantity
     else:
         quantity = app.config["ENTRIES"]
+    if page:
+        app.config['PAGE'] = page
     if not page:
         page = app.config['PAGE']
     offset = int(quantity) * (int(page) - 1)
@@ -37,7 +56,7 @@ def query_message(entries, user = None):
         end = ' wpisy'
     else:
         end = ' wpisów'
-    response = f'Znaleziono {len(entries)}' + end
+    response = f'Wyświetlono {len(entries)}' + end
     if user:
         response += f' użytkownika {user}'
     return response
