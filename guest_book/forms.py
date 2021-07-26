@@ -24,8 +24,3 @@ class Entry(FlaskForm):
     text = StringField('Wpis', validators = [Length(min = 1, max = max_entry_len,  message = entry_message)], widget=TextArea())
     write = SubmitField('Zapisz')
     query = SubmitField('Szukaj')
-    
-    #def validate_text(self):
-    #    if len(self.text) < 1 and len(self.text) > max_entry_len:
-    #        raise ValidationError(query_message)
-    #    return True
