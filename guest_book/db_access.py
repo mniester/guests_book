@@ -87,7 +87,6 @@ class DB_access:
             if user_id:
                 cmd += f'WHERE user = {user_id} '
         cmd += ';'
-        print(cmd)
         nr = DB_access.cursor.execute(cmd)
         nr = list(nr)[0][0]
         return nr

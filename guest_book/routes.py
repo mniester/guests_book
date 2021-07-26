@@ -64,7 +64,11 @@ def user(name = None, quantity = None, page = 1, cut = app.config["CUT"]):
         except KeyError:
             abort(404)
     with DB_access() as db:
-        max_page = get_max_page(db, quantity, name)
+        if name:
+            max_page = get_max_page(db, quantity, name)
+            app.config['NAME'] = name
+        else:
+            abort(404)
         entries = list(db.get_entries(quantity = quantity, user = name, offset = offset))
         if entries:
             template = 'entries.html' 
