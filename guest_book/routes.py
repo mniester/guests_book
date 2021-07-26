@@ -21,6 +21,8 @@ def index(quantity = None, page = 1, cut = app.config["CUT"]):
     back = 'Odśwież'
     with DB_access() as db:
         max_page = get_max_page(db, quantity)
+        if not max_page:
+            abort(404)
         if request.method == 'GET':
             status_code = 200
             message = 'Może coś napiszesz?'
@@ -53,8 +55,6 @@ def user(name = None, quantity = None, page = 1, cut = app.config["CUT"]):
     entry = Entry()
     quantity = request.args.get('quantity')
     page = request.args.get('page')
-    print(page)
-    quantity, offset = display_data(quantity, page, app)
     name = request.args.get('name')
     back = 'Pokaż wpisy wszystkich użytkowników'
     if name:
@@ -65,11 +65,10 @@ def user(name = None, quantity = None, page = 1, cut = app.config["CUT"]):
         except KeyError:
             abort(404)
     with DB_access() as db:
-        if name:
-            max_page = get_max_page(db, quantity, name)
-            app.config['NAME'] = name
-        else:
+        max_page = get_max_page(db, quantity, name)
+        if not max_page:
             abort(404)
+        quantity, offset = display_data(quantity, page, app)
         entries = list(db.get_entries(quantity = quantity, user = name, offset = offset))
         if entries:
             template = 'entries.html' 

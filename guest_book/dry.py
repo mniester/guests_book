@@ -1,18 +1,17 @@
 def get_max_page(db, quantity, name = None):
 
     '''Returns number of highest page to shown on main webpage'''
-
+    print(quantity, name)
     if name:
-        all_entries = db.check_entries(name)
+        all_entries_nr = db.check_entries(name)
     else:
-        all_entries = db.check_entries()
-    max_page = all_entries // int(quantity)
-    if not max_page:
-        return 1
-    if all_entries % max_page:
-        return max_page + 1
-    return max_page
-
+        all_entries_nr = db.check_entries()
+    if all_entries_nr:
+        quantity = int(quantity)
+        full_pages = all_entries_nr // quantity
+        if (full_pages * quantity) < all_entries_nr:
+            return full_pages + 1
+        return full_pages
 
 
 def display_data(quantity, page, app):

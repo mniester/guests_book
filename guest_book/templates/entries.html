@@ -3,7 +3,7 @@
 {% block content %}
 
 <dl> {% for entry in entries: %} 
-  <dt><a href="{{ url_for('user', name = entry.user, quantity = quantity) }}">{{ entry.user }}</a> o {{ entry.date }} napisał(a): </dt>
+  <dt><a href="{{ url_for('user', name = entry.user, quantity = quantity, page = 1) }}">{{ entry.user }}</a> o {{ entry.date }} napisał(a): </dt>
   <dd class = "entry"><p><a href="/entry/{{ entry.id }}" target="_blank">{{ entry.get_text(cut) }}</a></p></dd>
   {% endfor %}
 </dl>
