@@ -58,6 +58,7 @@
 
     <form action="/user/" method="get">
       <label for="finduser">Wyszukaj użytkownika: </label>
+      <input type="hidden" value = 1 name="page">
       <input type="text" id="finduser" name="name" placeholder = "{{ entry.nick_placeholder }}">
       <input type="submit" value="Szukaj">
     </form>

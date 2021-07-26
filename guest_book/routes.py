@@ -53,6 +53,7 @@ def user(name = None, quantity = None, page = 1, cut = app.config["CUT"]):
     entry = Entry()
     quantity = request.args.get('quantity')
     page = request.args.get('page')
+    print(page)
     quantity, offset = display_data(quantity, page, app)
     name = request.args.get('name')
     back = 'Pokaż wpisy wszystkich użytkowników'
