@@ -24,7 +24,7 @@ class DB_access:
         If its true, it returns their id'''
         
         cmd = f'''
-        SELECT DISTINCT id FROM user WHERE name = "{user}"; '''
+        SELECT id FROM user WHERE name = "{user}"; '''
         result = DB_access.cursor.execute(cmd)
         result = list(result)
         if result:
@@ -80,7 +80,8 @@ class DB_access:
             return False
     
     @staticmethod
-    def get_entries(nr = None, user = None, query = None, quantity = None):
+    def get_entries(nr = None, user = None, 
+        query = None, quantity = None, offset = None):
         
         '''Select entries from database'''
         
@@ -94,7 +95,10 @@ class DB_access:
         cmd += 'ORDER BY date DESC '
         if quantity:
              cmd += f'LIMIT {quantity} '
+        if offset:
+            cmd += f'OFFSET {offset} '
         cmd += ';'
+        print(cmd)
         source = DB_access.cursor.execute(cmd)
         for s in source:
             entry = Entry(s)

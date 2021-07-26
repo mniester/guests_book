@@ -1,3 +1,20 @@
+def display_data(quantity, page, app):
+
+    """Sets quantity of entries in page and which one should be shown.
+    If quantity is True, saves it in app.config["ENTRIES"].
+    If it is False, takes quantity from config."""
+
+    if quantity:
+        app.config["ENTRIES"] = quantity
+    else:
+        quantity = app.config["ENTRIES"]
+    if not page:
+        page = app.config['PAGE']
+    offset = int(quantity) * (int(page) - 1)
+    return quantity, offset
+
+
+
 def file_location(path):
 
     '''Return location of file
@@ -11,7 +28,7 @@ def file_location(path):
 
 def query_message(entries, user = None):
     
-    "Returns number of found entries with proper plural forms"
+    "Returns number of found entries with proper plural forms in Polish"
     
     found = len(entries)
     if str(found)[-1] == '1' and not (found >= 11 and found <= 19):
@@ -73,7 +90,7 @@ def db_operations(db, entry, quantity, user = None):
             message = 'Wpis jest nieprawidłowy'
         entries = db.get_entries(quantity = quantity)
     elif entry.query.data and entry.text.validate(entry):
-        entries = entry_query(entry, db, quantity)
+        entries = entry_query(entry, db, offset, quantity)
         if entries:
             status_code = 200
             message = query_message(entries)

@@ -3,61 +3,57 @@ from flask import render_template, request, url_for, redirect, abort, make_respo
 
 from guest_book import app
 from guest_book.db_access import DB_access
-from guest_book.dry import db_operations, query_message
+from guest_book.dry import db_operations, query_message, display_data
 from guest_book.forms import Entry
 from guest_book import app
 
 
 
 @app.route('/', methods = ['GET', 'POST'])
-def index(quantity = None, cut = app.config["CUT"]):
+def index(quantity = None, page = 1, cut = app.config["CUT"]):
 
     f'''Returns group of latest entries (default - {app.config["ENTRIES"]})'''
     
     entry = Entry()
     quantity = request.args.get('quantity')
-    if quantity:
-        app.config["ENTRIES"] = quantity
-    else:
-        quantity = app.config["ENTRIES"]
+    page = request.args.get('page')
+    quantity, offset = display_data(quantity, page, app)
     back = 'Odśwież'
     with DB_access() as db:
         if request.method == 'GET':
             status_code = 200
             message = 'Może coś napiszesz?'
-            entries = db.get_entries(quantity = quantity)
+            entries = db.get_entries(quantity = quantity, offset = offset)
         else:
             status_code, message, entries = db_operations(db, entry, quantity)
             if status_code == 404:
                 abort(404)
         if entries:
-            page = 'entries.html'
+            template = 'entries.html'
         else:
-            page = 'noentries.html'
-        return render_template(page, back = back,
+            template = 'noentries.html'
+        return render_template(template, back = back,
                                    entry = entry, 
                                    title = app.config['TITLE'],
                                    entries = entries,
                                    cut = cut,
                                    quantity = quantity,
+                                   page = page,
                                    message = message), status_code
 
 
 
 @app.route('/user/', methods = ['GET'])
-def user(name = None, quantity = None, cut = app.config["CUT"]):
+def user(name = None, quantity = None, page = 1, cut = app.config["CUT"]):
 
     f'''Returns group of latest entries (default - {app.config["ENTRIES"]}) of one user'''
 
     entry = Entry()
     quantity = request.args.get('quantity')
-    if quantity:
-        app.config["ENTRIES"] = quantity
-    else:
-        quantity = app.config["ENTRIES"]
-    status_code = 200
-    back = 'Pokaż wpisy wszystkich użytkowników'
+    page = request.args.get('page')
+    quantity, offset = display_data(quantity, page, app)
     name = request.args.get('name')
+    back = 'Pokaż wpisy wszystkich użytkowników'
     if name:
         app.config['NAME'] = name
     else:
@@ -66,18 +62,20 @@ def user(name = None, quantity = None, cut = app.config["CUT"]):
         except KeyError:
             abort(404)
     with DB_access() as db:
-        entries = list(db.get_entries(quantity = quantity, user = name))
+        entries = list(db.get_entries(quantity = quantity, user = name, offset = offset))
         if entries:
-            page = 'entries.html' 
+            template = 'entries.html' 
         else:
-            page = 'noentries.html'
+            template = 'noentries.html'
         message = query_message(entries, name)
-        return render_template(page, back = back,
+        status_code = 200
+        return render_template(template, back = back,
                                    entry = entry, 
                                    title = app.config['TITLE'],
                                    entries = entries,
                                    cut = cut,
                                    quantity = quantity,
+                                   page = page,
                                    message = message), status_code
 
 

@@ -2,6 +2,7 @@
   "TITLE": "Ksi\u0119ga go\u015bci",
   "ENTRIES": 3,
   "CUT": 30,
+  "PAGE": 1,
   "DB": "test.db",
   "SECRET_KEY": "trolololo"
 }
