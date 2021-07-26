@@ -60,10 +60,13 @@ def user(name = None, quantity = None, page = 1, cut = app.config["CUT"]):
     if name:
         app.config['NAME'] = name
     else:
+        if name == '':
+            abort(404)
         try:
             name = app.config['NAME']
         except KeyError:
             abort(404)
+    print(name)
     with DB_access() as db:
         max_page = get_max_page(db, quantity, name)
         if not max_page:

@@ -1,7 +1,6 @@
 def get_max_page(db, quantity, name = None):
 
     '''Returns number of highest page to shown on main webpage'''
-    print(quantity, name)
     if name:
         all_entries_nr = db.check_entries(name)
     else:
@@ -57,7 +56,7 @@ def query_message(entries, user = None):
         end = ' wpisów'
     response = f'Wyświetlono {len(entries)}' + end
     if user:
-        response += f' użytkownika {user}'
+        response += f', zapytanie o użytkownika: {user}'
     return response
 
 
