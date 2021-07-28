@@ -1,12 +1,10 @@
-from flask import render_template, request, url_for, redirect, abort, make_response, jsonify
+from flask import render_template, request, abort, make_response, jsonify
 
 
 from guest_book import app
 from guest_book.db_access import DB_access
 from guest_book.dry import db_operations, query_message, display_data, get_max_page
 from guest_book.forms import Entry
-from guest_book import app
-
 
 
 @app.route('/', methods = ['GET', 'POST'])
@@ -44,7 +42,6 @@ def index(quantity = None, page = 1, cut = app.config["CUT"]):
                                    page = page,
                                    max_page = max_page,
                                    message = message), status_code
-
 
 
 @app.route('/user/', methods = ['GET'])
@@ -90,7 +87,6 @@ def user(name = None, quantity = None, page = 1, cut = app.config["CUT"]):
                                    message = message), status_code
 
 
-
 @app.route('/entry/<entry_id>')
 def full_entry(entry_id):
 
@@ -114,7 +110,6 @@ def full_entry(entry_id):
                 text = entry.text), status_code
         else:
             abort(404)
-
 
 
 @app.route('/api', methods = ['POST'])
@@ -145,7 +140,6 @@ def api():
                 status_code = '400'
         response = make_response(output, status_code)
         return response
-
 
 
 @app.errorhandler(404)

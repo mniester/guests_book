@@ -31,7 +31,6 @@ def display_data(quantity, page, app):
     return quantity, offset
 
 
-
 def file_location(path):
 
     '''Return location of file
@@ -42,11 +41,10 @@ def file_location(path):
     return location
 
 
-
 def query_message(entries, user = None):
-    
+
     "Returns number of found entries with proper plural forms in Polish"
-    
+
     found = len(entries)
     if str(found)[-1] == '1' and not (found >= 11 and found <= 19):
         end = ' wpis'
@@ -60,27 +58,24 @@ def query_message(entries, user = None):
     return response
 
 
-
 def add_entry(entry, db):
-    
+
     '''Adds new entry'''
-    
+
     user = entry.nick.data
     entry_text = entry.text.data
     result = db.add_entry(user = user, entry_text = entry_text)
     return result
 
 
-
 def entry_query(entry, db, quantity):
-    
+
     '''Query for entry in data base'''
-    
+
     data = entry.text.data
     entries = db.get_entries(query = data, quantity = quantity)
     entries = list(entries)
     return entries
-
 
 
 def user_query(db, quantity, user):
@@ -92,11 +87,10 @@ def user_query(db, quantity, user):
     return entries
 
 
-
 def db_operations(db, entry, quantity, user = None):
-    
+
     '''Common funtion to handle db operations method'''
-    
+
     if entry.write.data and entry.validate():
         result = add_entry(entry, db)
         if result:
@@ -107,7 +101,7 @@ def db_operations(db, entry, quantity, user = None):
             message = 'Wpis jest nieprawidłowy'
         entries = db.get_entries(quantity = quantity)
     elif entry.query.data and entry.text.validate(entry):
-        entries = entry_query(entry, db, offset, quantity)
+        entries = entry_query(entry, db, quantity)
         if entries:
             status_code = 200
             message = query_message(entries)
@@ -127,4 +121,3 @@ def db_operations(db, entry, quantity, user = None):
         message = 'Polecenie nie spełnia wymagań'
         entries = db.get_entries(quantity = quantity)
     return status_code, message, entries
-    

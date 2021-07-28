@@ -1,12 +1,10 @@
-from guest_book import app
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField
-from wtforms.validators import Length, NumberRange, ValidationError
+from wtforms import StringField, SubmitField
+from wtforms.validators import Length
 from wtforms.widgets import TextArea
 
 
 max_entry_len = 1000
-
 
 
 class Entry(FlaskForm):
@@ -18,7 +16,6 @@ class Entry(FlaskForm):
     query_message = 'Długośc zapytania' + length_message
     nick_placeholder = f'Max. {max_nick_len} znaków' 
     entry_placeholder = f'Max. {max_entry_len} znaków'
-    
     nick = StringField('Użytkownik', validators = [Length(min = 1, 
         max = max_nick_len, message = nick_message)])
     text = StringField('Wpis', validators = [Length(min = 1, max = max_entry_len,  message = entry_message)], widget=TextArea())

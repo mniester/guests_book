@@ -1,14 +1,8 @@
 import requests
-import json
-
 from guest_book.db_access import DB_access
 from sqlite3 import OperationalError
-from flask import Response
-
-
 
 app_adress = 'http://127.0.0.1:5000/'
-
 
 
 def entries_generator(nr = 10, user = None, entry = None):
@@ -21,8 +15,8 @@ def entries_generator(nr = 10, user = None, entry = None):
 
 
 generators_codes = ((entries_generator(10), 201),
-                   (entries_generator(10, user ='x' * 25), 400), 
-                   (entries_generator(10, entry = 'x' * 1100), 400))
+                   (entries_generator(10, user ='x' * 25), 400),
+                   (entries_generator(10, entry ='x' * 1100), 400))
 
 
 def test_pytest():
@@ -31,7 +25,6 @@ def test_pytest():
     
     assert True
     assert not False
-
 
 
 def test_clean_db():
@@ -53,7 +46,6 @@ def test_clean_db():
             assert False
 
 
-
 def test_new_user():
 
     '''Adds fake user and then 
@@ -73,8 +65,7 @@ def test_new_user():
             result = db.add_user(user)
             assert result in (True, False)
             check = db.check_user(user)
-            assert check == None or type(check) == int
-
+            assert check is None or type(check) == int
 
 
 def test_add_entry():
@@ -97,27 +88,24 @@ def test_add_entry():
                 assert r.text == 'Odpowiedni wpis testowy'
 
 
-
 def test_api():
 
     '''Tests API route'''
 
     api_adress = app_adress + 'api'
-    with DB_access() as db:
-        for generator, code in generators_codes:
-            for entry in generator:
-                try:
-                    entry_in = {'user': entry[0], 
-                               'text': entry[1], 
-                               'mode': 'in'}
-                    response = requests.post(api_adress, json = entry_in)
-                    assert response.status_code == code
-                    if code == 201:
-                        entry_out = {'user': entry_in['user'], 
-                                    'quantity': 1,
-                                    'mode': 'out'}
-                        response = requests.post(api_adress, json = entry_out)
-                        assert response.status_code == 201
-                except ConnectionError:
-                    assert False
-
+    for generator, code in generators_codes:
+        for entry in generator:
+            try:
+                entry_in = {'user': entry[0],
+                           'text': entry[1],
+                           'mode': 'in'}
+                response = requests.post(api_adress, json = entry_in)
+                assert response.status_code == code
+                if code == 201:
+                    entry_out = {'user': entry_in['user'],
+                                'quantity': 1,
+                                'mode': 'out'}
+                    response = requests.post(api_adress, json = entry_out)
+                    assert response.status_code == 201
+            except ConnectionError:
+                assert False

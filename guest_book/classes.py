@@ -1,9 +1,9 @@
 class Entry:
-    
+
     '''Entry taken from DB'''
 
     __slots__ = 'id', 'user', 'text', 'date'
-    
+
     def __init__(self, data):
         self.id = data[0]
         self.user = data[2]
@@ -19,6 +19,6 @@ class Entry:
             return text
         else:
             return self.text
-    
+
     def __repr__(self):
         return f'Entry, {self.user}, {self.date} \n {self.get_text(10)}\n\n'
