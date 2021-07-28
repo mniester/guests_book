@@ -60,7 +60,8 @@
       <label for="finduser">Wyszukaj użytkownika: </label>
       <input type="hidden" value = 1 name="page">
       <input type="hidden" value = {{ quantity }} name="quantity">
-      <input type="text" id="finduser" name="name" placeholder = "{{ entry.nick_placeholder }}">
+      <input type="text" id="finduser" maxlength="{{ entry.max_nick_len }}" name="name"
+       placeholder = "{{ entry.nick_placeholder }}" required>
       <input type="submit" value="Szukaj">
     </form>
   
