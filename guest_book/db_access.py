@@ -78,6 +78,9 @@ class DB_access:
 
     @staticmethod
     def check_entries(user = None):
+
+        '''Check how many entries are in the base'''
+
         cmd = 'SELECT COUNT(id) FROM entry ' 
         if user:
             user_id = DB_access.check_user(user)
@@ -104,7 +107,7 @@ class DB_access:
         cmd += 'ORDER BY date DESC '
         if quantity:
              cmd += f'LIMIT {quantity} '
-        if offset:
+        if offset and offset < DB_access.check_entries(user):
             cmd += f'OFFSET {offset} '
         cmd += ';'
         source = DB_access.cursor.execute(cmd)

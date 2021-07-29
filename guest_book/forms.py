@@ -18,6 +18,7 @@ class Entry(FlaskForm):
     entry_placeholder = f'Max. {max_entry_len} znaków'
     nick = StringField('Użytkownik', validators = [Length(min = 1, 
         max = max_nick_len, message = nick_message)])
-    text = StringField('Wpis', validators = [Length(min = 1, max = max_entry_len,  message = entry_message)], widget=TextArea())
+    text = StringField('Wpis', validators = [Length(min = 1,
+        max = max_entry_len,  message = entry_message)], widget=TextArea())
     write = SubmitField('Zapisz')
     query = SubmitField('Szukaj')

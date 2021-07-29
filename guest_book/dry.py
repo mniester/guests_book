@@ -1,6 +1,7 @@
 def get_max_page(db, quantity, name = None):
 
     '''Returns number of highest page to shown on main webpage'''
+
     if name:
         all_entries_nr = db.check_entries(name)
     else:
