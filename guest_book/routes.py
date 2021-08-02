@@ -135,9 +135,7 @@ def api():
                     output['date'].append(entry.date)
                     output['text'].append(entry.text)
                 output = jsonify(output)
-                status_code = '201'
-                response = make_response(output)
-                return response
+                return output
             else:
                 status_code = '400'
         response = make_response('', status_code)

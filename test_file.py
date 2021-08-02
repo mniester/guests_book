@@ -111,6 +111,5 @@ def test_api():
                                 'quantity': 1,
                                 'mode': 'out'}
                     response = requests.post(api_adress, json = entry_out)
-                    
             except ConnectionError:
                 assert False

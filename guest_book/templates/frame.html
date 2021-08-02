@@ -53,7 +53,7 @@
         <span class="error"> {{ err2 }} </span>
         {% endfor %}
       </div>
-      <p>{{ entry.write() }}<span>{{ entry.query() }}</span></p>
+      <p>{{ entry.write() }} {{ entry.query() }}</p>
     </form>
 
     <form action="/user/" method="get">
