@@ -126,7 +126,8 @@ def api():
             else:
                 status_code = '400'
         else:
-            result = db.get_entries(data['quantity'])
+            result = db.get_entries(user = data['user'],
+                                    quantity = data['quantity'])
             if result:
                 output = {'user': [], 'date': [], 'text': []}
                 for entry in result:
@@ -135,9 +136,11 @@ def api():
                     output['text'].append(entry.text)
                 output = jsonify(output)
                 status_code = '201'
+                response = make_response(output)
+                return response
             else:
                 status_code = '400'
-        response = make_response(output, status_code)
+        response = make_response('', status_code)
         return response
 
 
