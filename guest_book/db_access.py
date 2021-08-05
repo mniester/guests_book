@@ -16,17 +16,26 @@ class DB_access:
         return DB_access
 
     @staticmethod
-    def check_user(user):
+    def check_user(user, exact):
 
         '''Checks, whether user is already in DB or not.
-        If its true, it returns their id'''
+        If its true, it returns their id.
+        Has two modes - one is exact query, other regular expression search'''
 
-        cmd = f'''
-        SELECT id FROM user WHERE name = "{user}"; '''
+        if exact:
+            cmd = f'''
+            SELECT id FROM user WHERE name = "{user}"; '''
+        else:
+            cmd = f''' SELECT id FROM user WHERE name LIKE "%{user}%"; '''
         result = DB_access.cursor.execute(cmd)
         result = list(result)
+        print(result)
         if result:
-            return result[0][0]
+            if exact:
+                return result[0][0]
+            else:
+                result = tuple([x[0] for x in result])
+                return result
 
     @staticmethod
     def add_user(user):
@@ -46,7 +55,7 @@ class DB_access:
         first check whether autor is in DB, if not it creates them.
         Then it adds entry text. It is only way to add user(user)'''
 
-        user_key = DB_access.check_user(user)
+        user_key = DB_access.check_user(user, exact = True)
         if not user_key:
             result = DB_access.add_user(user)
             if result:
@@ -83,9 +92,11 @@ class DB_access:
 
         cmd = 'SELECT COUNT(id) FROM entry ' 
         if user:
-            user_id = DB_access.check_user(user)
-            if user_id:
-                cmd += f'WHERE user = {user_id} '
+            users_ids = DB_access.check_user(user, exact = False)
+            print(users_ids)
+            if users_ids:
+                users_ids = str(users_ids)
+                cmd += f'WHERE user in {users_ids} '
         cmd += ';'
         nr = DB_access.cursor.execute(cmd)
         nr = list(nr)[0][0]
