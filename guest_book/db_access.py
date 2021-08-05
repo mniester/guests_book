@@ -35,6 +35,9 @@ class DB_access:
                 return result[0][0]
             else:
                 result = tuple([x[0] for x in result])
+                print(result)
+                if len(result) == 1:
+                    result = result[0]
                 return result
 
     @staticmethod
@@ -95,9 +98,13 @@ class DB_access:
             users_ids = DB_access.check_user(user, exact = False)
             print(users_ids)
             if users_ids:
-                users_ids = str(users_ids)
+                if type(users_ids) is tuple:
+                    users_ids = str(users_ids)
+                else:
+                    users_ids = '(' + str(users_ids) + ')'
                 cmd += f'WHERE user in {users_ids} '
         cmd += ';'
+        print(cmd)
         nr = DB_access.cursor.execute(cmd)
         nr = list(nr)[0][0]
         return nr
