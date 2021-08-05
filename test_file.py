@@ -69,7 +69,7 @@ def test_new_user():
         for user in users:
             result = db.add_user(user)
             assert result in (True, False)
-            check = db.check_user(user)
+            check = db.check_user(user, exact = True)
             assert check is None or type(check) == int
 
 
