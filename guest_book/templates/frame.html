@@ -37,12 +37,12 @@
 
       {% block content %}{% endblock %}
 
-    <form action="{{ url_for('index') }}" method="post" novalidate>
+    <form action="{{ url_for('index') }}" method="post">
       {{ entry.hidden_tag() }}
       <div>
-        <p>{{ entry.nick.label }}</p>
-        <p>{{ entry.nick(placeholder=entry.nick_placeholder) }}</p>
-        {% for err1 in entry.nick.errors %}
+        <p>{{ entry.user.label }}</p>
+        <p>{{ entry.user(placeholder=entry.user_placeholder) }}</p>
+        {% for err1 in entry.user.errors %}
         <span class="error"> {{ err1 }} </span>
         {% endfor %}
       </div>
@@ -54,6 +54,10 @@
         {% endfor %}
       </div>
       <p>{{ entry.write() }} {{ entry.query() }}</p>
+    </form>
+    
+    <form action="{{ url_for('index') }}" method="get">
+      {{ entry.hidden_tag() }}
     </form>
 
     <form action="/user/" method="get">

@@ -63,7 +63,7 @@ def add_entry(entry, db):
 
     '''Adds new entry'''
 
-    user = entry.nick.data
+    user = entry.user.data
     entry_text = entry.text.data
     result = db.add_entry(user = user, entry_text = entry_text)
     return result

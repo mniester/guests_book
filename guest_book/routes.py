@@ -15,6 +15,7 @@ def index(quantity = None, page = 1, cut = app.config["CUT"]):
     entry = Entry()
     quantity = request.args.get('quantity')
     page = request.args.get('page')
+    print(quantity, page)
     quantity, offset = display_data(quantity, page, app)
     back = 'Odśwież'
     with DB_access() as db:
