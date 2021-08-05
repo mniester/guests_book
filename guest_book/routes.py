@@ -29,10 +29,7 @@ def index(quantity = None, page = 1, cut = app.config["CUT"]):
             status_code, message, entries = db_operations(db, entry, quantity)
             if status_code == 404:
                 abort(404)
-        if entries:
-            template = 'entries.html'
-        else:
-            template = 'noentries.html'
+        template = 'frame.html'
         return render_template(template, back = back,
                                    entry = entry, 
                                    title = app.config['TITLE'],
@@ -69,10 +66,7 @@ def user(name = None, quantity = None, page = 1, cut = app.config["CUT"]):
             abort(404)
         quantity, offset = display_data(quantity, page, app)
         entries = list(db.get_entries(quantity = quantity, user = name, offset = offset))
-        if entries:
-            template = 'entries.html' 
-        else:
-            template = 'noentries.html'
+        template = 'frame.html'
         message = query_message(entries, name)
         status_code = 200
         return render_template(template, back = back,

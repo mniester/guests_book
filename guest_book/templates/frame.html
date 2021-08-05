@@ -18,6 +18,12 @@
     
     <h1>{{ message }}</h1>
     
+    <dl> {% for entry in entries: %} 
+      <dt><a href="{{ url_for('user', name = entry.user, quantity = quantity, page = 1) }}">{{ entry.user }}</a> o {{ entry.date }} napisał(a): </dt>
+      <dd class = "entry"><p><a href="/entry/{{ entry.id }}" target="_blank">{{ entry.get_text(cut) }}</a></p></dd>
+      {% endfor %}
+    </dl>
+    
     <form action="" method="get">
       <label for="entries">Liczba wpisów (od 1 do 20)</label>
       <input type="number" id="entries" name="quantity" size = "2"
@@ -32,34 +38,18 @@
       href="{{ url_for('static',filename='/accessories-character-map.svg') }}">
     </form>
 
-      {% block content %}{% endblock %}
-
-    <form action="{{ url_for('index') }}" method="post">
-      {{ entry.hidden_tag() }}
+     <form action="/" method="get">
       <div>
-        <p>{{ entry.user.label }}</p>
-        <p>{{ entry.user(placeholder=entry.user_placeholder) }}</p>
-        {% for err1 in entry.user.errors %}
-        <span class="error"> {{ err1 }} </span>
-        {% endfor %}
+        <label for="user">Wyszukaj użytkownika: </label>
+        <input type="text" id="user" maxlength="20" name="user" placeholder = "Max. 20 znaków" required>
       </div>
       <div>
-        <p>{{ entry.text.label }}</p>
-        <p>{{ entry.text(placeholder=entry.entry_placeholder, rows = 10, cols = 50) }}</p>
-        {% for err2 in entry.text.errors %}
-        <span class="error"> {{ err2 }} </span>
-        {% endfor %}
+        <textarea id="text" name="text" rows="4" 
+        cols="50" maxlength="1000"
+        placeholder = "Max. 1000 znaków" required></textarea>
       </div>
-      <p>{{ entry.write() }} {{ entry.query() }}</p>
-    </form>
-
-    <form action="/user/" method="get">
-      <label for="finduser">Wyszukaj użytkownika: </label>
-      <input type="hidden" value = 1 name="page">
-      <input type="hidden" value = {{ quantity }} name="quantity">
-      <input type="text" id="finduser" maxlength="{{ entry.max_nick_len }}" name="name"
-       placeholder = "{{ entry.nick_placeholder }}" required>
-      <input type="submit" value="Szukaj">
+        <input type="submit" name="add" value="Dodaj" formaction="/" formmethod = 'post'>
+        <input type="submit" name="query" value="Szukaj">
     </form>
   
   </body>
