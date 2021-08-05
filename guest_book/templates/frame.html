@@ -27,6 +27,9 @@
       <input type="number" id="page" name="page" size = "2"
         min="1" max= "{{ max_page }}" value= "1" placeholder = "{{ page }}">
       <input type="submit" value="Ustaw">
+      
+      <link rel="shortcut icon" type="image/jpg" 
+      href="{{ url_for('static',filename='/accessories-character-map.svg') }}">
     </form>
 
       {% block content %}{% endblock %}
