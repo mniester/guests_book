@@ -7,9 +7,11 @@
     <meta lang ='pl'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel= "stylesheet" type= "text/css" 
-    href= "{{ url_for('static',filename='/style.css') }}">
+    href= '/static/style.css'>
     <link rel="shortcut icon" type="image/jpg" 
-    href="{{ url_for('static',filename='/accessories-character-map.svg') }}">
+    href="/static/accessories-character-map.svg'">
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script defer src="/static/ajax.js"></script>
   </head>
 
   <body>
@@ -39,10 +41,10 @@
     </form>
 
      <form action="/" method="get">
-      <div>
+      <p><div>
         <label for="user">Wyszukaj użytkownika: </label>
         <input type="text" id="user" maxlength="20" name="user" placeholder = "Max. 20 znaków" required>
-      </div>
+      </p></div>
       <div>
         <textarea id="text" name="text" rows="4" 
         cols="50" maxlength="1000"
