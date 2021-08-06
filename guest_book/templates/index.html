@@ -2,7 +2,7 @@
 
 <html>
   <head>
-    <title>{{ title }}</title>
+    <title> {{ title }}</title>
     <meta charset="UTF-8">
     <meta lang ='pl'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,24 +16,18 @@
 
   <body>
 
-    <p><a href = "{{ url_for('index', quantity = quantity, page = 1) }}">{{ back }}</a></p>
+    <p id='back'> BACK </p>
     
-    <h1>{{ message }}</h1>
-    
-    <dl> {% for entry in entries: %} 
-      <dt><a href="{{ url_for('user', name = entry.user, quantity = quantity, page = 1) }}">{{ entry.user }}</a> o {{ entry.date }} napisał(a): </dt>
-      <dd class = "entry"><p><a href="/entry/{{ entry.id }}" target="_blank">{{ entry.get_text(cut) }}</a></p></dd>
-      {% endfor %}
-    </dl>
+    <h1> Wpisy: </h1>
     
     <form id = "entries_data" action="/" method="get">
-      <label for="entries">Liczba wpisów (od 1 do 20)</label>
+      <label for="entries">Liczba wpisów (od 1 do {{ max_entries }})</label>
       <input type="number" id="quantity" name="quantity" size = "2"
-        min="1" max="20" value= "{{ quantity }}" placeholder = "{{ quantity }}">
+        min="1" max="{{ max_entries }}" value= "{{ quantity }}" placeholder = "{{ quantity }}">
       
       <label for="page">Nr strony</label>
       <input type="number" id="page" name="page" size = "2"
-        min="1" max= "{{ max_page }}" value= "1" placeholder = "{{ page }}">
+        min="1" max= "{{ max_page }}" value= "{{ page }}" placeholder = "{{ page }}">
       <input type="submit" value="Ustaw">
       
     </form>
@@ -41,12 +35,13 @@
      <form action="/" method="get">
       <p><div>
         <label for="user">Wyszukaj użytkownika: </label>
-        <input type="text" id="user" maxlength="20" name="user" placeholder = "Max. 20 znaków" required>
+        <input type="text" id="user" maxlength="{{ max_user_len }}" name="user" 
+        placeholder = "Max. {{ max_user_len }} znaków" required>
       </p></div>
       <div>
         <textarea id="text" name="text" rows="4" 
-        cols="50" maxlength="1000"
-        placeholder = "Max. 1000 znaków" required></textarea>
+        cols="50" maxlength="{{ max_entry_len }}"
+        placeholder = "Max. {{ max_entry_len }} znaków" required></textarea>
       </div>
         <input type="submit" name="add" value="Dodaj" formaction="/" formmethod = 'post'>
         <input type="submit" name="query" value="Szukaj">
