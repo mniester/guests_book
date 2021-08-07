@@ -23,24 +23,25 @@
     <form id = "entries_data" action="/" method="get">
       <label for="entries">Liczba wpisów (od 1 do {{ max_entries }})</label>
       <input type="number" id="quantity" name="quantity" size = "2"
-        min="1" max="{{ max_entries }}" value= "{{ quantity }}" placeholder = "{{ quantity }}">
+        min="1" max="{{ max_entries }}" required>
       
-      <label for="page">Nr strony</label>
+      <label for="page">Nr strony (max. <span>{{ max_page }})</span></label>
       <input type="number" id="page" name="page" size = "2"
-        min="1" max= "{{ max_page }}" value= "{{ page }}" placeholder = "{{ page }}">
-      <input type="submit" value="Ustaw">
+        min="1" max= "{{ max_page }}" value= "1">
+      <input id = "entry_data" type="submit" value="Ustaw">
       
     </form>
 
      <form action="/" method="get">
       <p><div>
-        <label for="user">Wyszukaj użytkownika: </label>
-        <input type="text" id="user" maxlength="{{ max_user_len }}" name="user" 
+        <p><label for="user">Użytkownik: </label></p>
+        <input type="text" id="user" maxlength="{{ max_user_len }}" size="{{ max_user_len }}" name="user" 
         placeholder = "Max. {{ max_user_len }} znaków" required>
       </p></div>
       <div>
-        <textarea id="text" name="text" rows="4" 
-        cols="50" maxlength="{{ max_entry_len }}"
+        <p><label for="text">Wpis: </label></p>
+        <textarea id="text" name="text" rows="6" 
+        cols="70" maxlength="{{ max_entry_len }}"
         placeholder = "Max. {{ max_entry_len }} znaków" required></textarea>
       </div>
         <input type="submit" name="add" value="Dodaj" formaction="/" formmethod = 'post'>

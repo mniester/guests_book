@@ -16,13 +16,13 @@ h1 {
 }
 
 a:link {
-  color: 1f7a1f;
+  color: #1f7a1f;
   background-color: transparent;
   text-decoration: none;
 }
 
 a:visited {
-  color: ffff00;
+  color: #ffff00;
   background-color: transparent;
   text-decoration: none;
 }
