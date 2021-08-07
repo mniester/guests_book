@@ -21,21 +21,6 @@ def index():
                             title = app.config['TITLE'])
 
 
-@app.route('/config', methods = ['GET'])
-def config():
-    
-    '''Returns JSON with initial config'''
-
-    with DB_access() as db:
-        max_page = get_max_page(db, quantity = app.config['ENTRIES_PER_PAGE'])
-    initial_config = {'max_entries': app.config['MAX_ENTRIES'], 
-            'max_user_len': app.config['MAX_USER_LEN'],
-            'max_entry_len': app.config['MAX_ENTRY_LEN'],
-            'max_page': max_page}
-    initial_config = jsonify(initial_config)
-    return initial_config
-
-
 @app.route('/entry/<entry_id>')
 def full_entry(entry_id):
 
