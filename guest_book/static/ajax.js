@@ -2,6 +2,17 @@ $(document).ready(function() {
   
   console.log( "ready!" );
   
+  // Taking entries (in single JSON) from server
+  
+  function getEntries(response) 
+    {for (let i = 0; len = response.user.length; i++)
+      {console.log(response.user[i]);};
+    };
+  
+  // First data taken from server
+  var firstQuery = JSON.stringify({'user': null})
+  $.getJSON("/api", firstQuery, function() {getEntries(data)});
+  
   // Taking data from URL - nr of entries and page
   
   const queryString = window.location.search;
@@ -9,15 +20,11 @@ $(document).ready(function() {
   if (queryString.length > 0) {
     var quantity = urlParams.get('quantity');
     var page = urlParams.get('page');
-    console.log(quantity, page)};
+    };
   
-  // Validation error - no data provided
+  // Validation error - no proper numeric data provided
   
   function noNumbersError() {alert('Proszę podać dane liczbowe')};
-  
-  // Validation error - can't convert string to numeric
-  
-  function numbersRequired() {alert('Proszę podać liczby')};
   
   // Taking data from form - nr of entries and page
 
@@ -30,8 +37,6 @@ $(document).ready(function() {
       } else {
       quantity = parseInt(quantity);
       page = parseInt(page)};
-    x = quantity;
-    y = page;
     console.log(x, y);});
 
 });

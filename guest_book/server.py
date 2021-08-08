@@ -46,15 +46,15 @@ def full_entry(entry_id):
             abort(404)
 
 
-@app.route('/api', methods = ['POST'])
+@app.route('/api', methods = ['GET', 'POST'])
 def api():
 
     '''Accepts entries as JSONs.'''
 
-    data = request.json
+    data = request.get_json(force=True)
+    print(data)
     with DB_access() as db:
-        output = ''
-        if data['mode'] == 'in':
+        if request.method == 'POST':
             result = db.add_entry(user = data['user'], entry_text = data['text'])
             if result:
                 status_code = '201'
@@ -68,8 +68,9 @@ def api():
                 for entry in result:
                     output['user'].append(entry.user)
                     output['date'].append(entry.date)
-                    output['text'].append(entry.text)
+                    output['text'].append(entry.get_text(app.config['CUT']))
                 output = jsonify(output)
+                print(output)
                 return output
             else:
                 status_code = '400'
