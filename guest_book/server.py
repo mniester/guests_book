@@ -18,6 +18,8 @@ def index():
                             max_entries = app.config['MAX_ENTRIES'],
                             max_page = max_page,
                             entries_per_page = app.config["ENTRIES_PER_PAGE"],
+                            max_entry_len = app.config["MAX_ENTRY_LEN"],
+                            max_user_len = app.config["MAX_USER_LEN"],
                             title = app.config['TITLE'])
 
 
@@ -49,9 +51,13 @@ def full_entry(entry_id):
 @app.route('/api', methods = ['GET', 'POST'])
 def api():
 
-    '''Accepts entries as JSONs.'''
+    '''Accepts entries (using post HTTP method) 
+    and return queries (using get HTTP method)'''
 
-    data = request.get_json(force=True)
+    if request.method == 'POST':
+        data = request.get_json(force=True)
+    else:
+        data = request.args
     print(data)
     with DB_access() as db:
         if request.method == 'POST':
@@ -66,11 +72,12 @@ def api():
             if result:
                 output = {'user': [], 'date': [], 'text': []}
                 for entry in result:
+                    print(entry)
                     output['user'].append(entry.user)
                     output['date'].append(entry.date)
                     output['text'].append(entry.get_text(app.config['CUT']))
                 output = jsonify(output)
-                print(output)
+                print(output.data)
                 return output
             else:
                 status_code = '400'

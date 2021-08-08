@@ -4,14 +4,18 @@ $(document).ready(function() {
   
   // Taking entries (in single JSON) from server
   
-  function getEntries(response) 
-    {for (let i = 0; len = response.user.length; i++)
-      {console.log(response.user[i]);};
+  function getEntries(response) {
+    response = JSON.parse(response);
+    {for (let i = 0; len = response.user.length; i++) {
+      insert = "<dt> " + response.user[i] + " <span> " + response.date[i] + " </span>\n</dt> " + " <dd> " + response.text[i] + " </dd>";
+      $("list").append(insert)};
     };
+  };
   
   // First data taken from server
-  var firstQuery = JSON.stringify({'user': null})
-  $.getJSON("/api", firstQuery, function() {getEntries(data)});
+
+  var firstQuery = {"user": null, "quantity" : $("#quantity").val()};
+  $.getJSON("/api", firstQuery, function(data) {getEntries(data)});
   
   // Taking data from URL - nr of entries and page
   
@@ -37,6 +41,6 @@ $(document).ready(function() {
       } else {
       quantity = parseInt(quantity);
       page = parseInt(page)};
-    console.log(x, y);});
+    console.log(quantity, page);});
 
 });
