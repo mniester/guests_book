@@ -11,12 +11,27 @@ $(document).ready(function() {
     var page = urlParams.get('page');
     console.log(quantity, page)};
   
-  // Taking data from form - nr of entries and page
+  // Validation error - no data provided
   
+  function noNumbersError() {alert('Proszę podać dane liczbowe')};
+  
+  // Validation error - can't convert string to numeric
+  
+  function numbersRequired() {alert('Proszę podać liczby')};
+  
+  // Taking data from form - nr of entries and page
+
   $('#quantity_page').click(function (event) {
     event.preventDefault();
-    quantity = $("#quantity").val();
-    page = $("#page").val();
-    console.log(quantity, page);});
+    var quantity = $("#quantity").val();
+    var page = $("#page").val();
+    if (quantity.length == '' || page.length == '') {
+      noNumbersError();
+      } else {
+      quantity = parseInt(quantity);
+      page = parseInt(page)};
+    x = quantity;
+    y = page;
+    console.log(x, y);});
 
 });

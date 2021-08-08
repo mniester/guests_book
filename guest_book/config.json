@@ -3,7 +3,7 @@
   "MAX_ENTRIES" : 20,
   "MAX_USER_LEN": 20,
   "MAX_ENTRY_LEN": 1000, 
-  "ENTRIES_PER_PAGE": 3,
+  "ENTRIES_PER_PAGE": 5,
   "CUT": 30,
   "PAGE": 1,
   "DB": "test.db",
