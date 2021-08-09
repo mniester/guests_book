@@ -6,10 +6,8 @@ $(document).ready(function main () {
   
   function printEntries(response) {
     for (let i = 0; i < response.user.length; i++) {
-    console.log(response.date[i], response.user[i], response.text[i])};
-    //for (let i = 0; len = response.user.length; i++) {
-    //  insert = "<dt> " + response.user[i] + " <span> " + response.date[i] + " </span>\n</dt> " + " <dd> " + response.text[i] + " </dd>";
-    //  $("list").append(insert)};
+      insert = "<dt><p> " + response.user[i] + " <span> " + response.date[i] + "  </p></span></dt> " + " <dd><p> " + response.text[i] + " </p></dd>";
+      $("#list").append(insert)};
     };
   
   // Taking default data - nr of entries and page
