@@ -12,11 +12,8 @@ def index():
     f'''Returns empty page'''
 
     template = 'index.html'
-    with DB_access() as db:
-        max_page = get_max_page(db, quantity = app.config['ENTRIES_PER_PAGE'])
     return render_template(template,
                             max_entries = app.config['MAX_ENTRIES'],
-                            max_page = max_page,
                             entries_per_page = app.config["ENTRIES_PER_PAGE"],
                             max_entry_len = app.config["MAX_ENTRY_LEN"],
                             max_user_len = app.config["MAX_USER_LEN"],
@@ -46,6 +43,18 @@ def full_entry(entry_id):
                 text = entry.text), status_code
         else:
             abort(404)
+
+
+@app.route('/default', methods = ['GET'])
+def config():
+    
+    '''Return default config to client'''
+    
+    with DB_access() as db:
+        output = {'max_page': get_max_page(db, app.config["ENTRIES_PER_PAGE"], name = None),
+                'quantity': app.config["ENTRIES_PER_PAGE"]}
+        output = jsonify(output)
+        return output
 
 
 @app.route('/api', methods = ['GET', 'POST'])
