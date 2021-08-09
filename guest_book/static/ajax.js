@@ -2,8 +2,14 @@ $(document).ready(function main () {
   
   // get default number of pages and max page from server
   
-  var defaultConfig = $.getJSON('/default', null);
-  console.log(defaultConfig);
+  var defaultConfig = $.getJSON('/default', null, function(data) {
+    console.log(data);
+    page = document.getElementById("page");
+    quantity = document.getElementById("quantity");
+    page.setAttribute("max", data.max_page);
+    page.setAttribute("value", 1);
+    quantity.setAttribute("value", data.quantity);
+    });
   
   // Taking entries (in single JSON) from server
   
@@ -11,7 +17,7 @@ $(document).ready(function main () {
     $.getJSON("/api", query, function (data) { printEntries(data) });
     };
   
-  // Clening Putting entries in page
+  // Cleaning page and putting new entries into it
   
   function printEntries(response) {
     for (let i = 0; i < response.user.length; i++) {
