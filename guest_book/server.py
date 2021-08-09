@@ -58,6 +58,7 @@ def api():
         data = request.get_json(force=True)
     else:
         data = request.args
+    print(data)
     with DB_access() as db:
         if request.method == 'POST':
             result = db.add_entry(user = data['user'], entry_text = data['text'])
@@ -66,7 +67,7 @@ def api():
             else:
                 status_code = '400'
         else:
-            offset = get_offset(quantity, data['page'], app)
+            offset = get_offset(data['quantity'], data['page'], app)
             result = db.get_entries(user = data['user'],
                                     quantity = data['quantity'],
                                     offset = offset)

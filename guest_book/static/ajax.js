@@ -21,12 +21,12 @@ $(document).ready(function() {
     var page = urlParams.get('page');
     } else {
     var quantity = $("#quantity").val();
-    var page = 1;};
+    var page = 1};
   
   // First data taken from server
 
-  var firstQuery = {"user": null, "quantity" : quantity, 'page': page};
-  $.getJSON("/api", firstQuery, getEntries(data));
+  var firstQuery = {"user": null, "quantity" : quantity, "page": page};
+  $.getJSON("/api", firstQuery, function(data) {getEntries(data)});
   
   // Validation error - no proper numeric data provided
   
