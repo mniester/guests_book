@@ -14,22 +14,14 @@ def get_max_page(db, quantity, name = None):
         return full_pages
 
 
-def display_data(quantity, page, app):
+def get_offset(quantity, page, app):
 
-    """Sets quantity of entries in page and which one should be shown.
-    If quantity is True, saves it in app.config["ENTRIES"].
-    If it is False, takes quantity from config."""
+    """Counts value of offset for DB operations"""
 
-    if quantity:
-        app.config["ENTRIES"] = quantity
-    else:
-        quantity = app.config["ENTRIES"]
-    if page:
-        app.config['PAGE'] = page
     if not page:
         page = app.config['PAGE']
     offset = int(quantity) * (int(page) - 1)
-    return quantity, offset
+    return offset
 
 
 def file_location(path):

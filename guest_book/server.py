@@ -3,7 +3,7 @@ from flask import render_template, request, abort, make_response, jsonify
 
 from guest_book import app
 from guest_book.db_access import DB_access
-from guest_book.dry import db_operations, query_message, display_data, get_max_page
+from guest_book.dry import db_operations, query_message, get_offset, get_max_page
 
 
 @app.route('/', methods = ['GET'])
@@ -58,7 +58,6 @@ def api():
         data = request.get_json(force=True)
     else:
         data = request.args
-    print(data)
     with DB_access() as db:
         if request.method == 'POST':
             result = db.add_entry(user = data['user'], entry_text = data['text'])
@@ -67,17 +66,17 @@ def api():
             else:
                 status_code = '400'
         else:
+            offset = get_offset(quantity, data['page'], app)
             result = db.get_entries(user = data['user'],
-                                    quantity = data['quantity'])
+                                    quantity = data['quantity'],
+                                    offset = offset)
             if result:
                 output = {'user': [], 'date': [], 'text': []}
                 for entry in result:
-                    print(entry)
                     output['user'].append(entry.user)
                     output['date'].append(entry.date)
                     output['text'].append(entry.get_text(app.config['CUT']))
                 output = jsonify(output)
-                print(output.data)
                 return output
             else:
                 status_code = '400'
