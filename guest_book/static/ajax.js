@@ -1,18 +1,20 @@
-$(document).ready(function() {
+$(document).ready(function main () {
   
   console.log( "ready!" );
   
   // Taking entries (in single JSON) from server
   
-  function getEntries(response) {
-    console.log('PING');
-    console.log(response);
-    for (let i = 0; len = response.user.length; i++) {
-      insert = "<dt> " + response.user[i] + " <span> " + response.date[i] + " </span>\n</dt> " + " <dd> " + response.text[i] + " </dd>";
-      $("list").append(insert)};
+  function printEntries(response) {
+    for (let i = 0; i < response.user.length; i++) {
+    console.log(response.date[i], response.user[i], response.text[i])};
+    //for (let i = 0; len = response.user.length; i++) {
+    //  insert = "<dt> " + response.user[i] + " <span> " + response.date[i] + " </span>\n</dt> " + " <dd> " + response.text[i] + " </dd>";
+    //  $("list").append(insert)};
     };
   
-  // Taking data from URL - nr of entries and page
+  // Taking default data - nr of entries and page
+  // First app tries to take data from URL
+  // if not - takes quantity of pages from form and show first page
   
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
@@ -24,9 +26,9 @@ $(document).ready(function() {
     var page = 1};
   
   // First data taken from server
-
+  
   var firstQuery = {"user": null, "quantity" : quantity, "page": page};
-  $.getJSON("/api", firstQuery, function(data) {getEntries(data)});
+  $.getJSON("/api", firstQuery, function (data) { printEntries(data) });
   
   // Validation error - no proper numeric data provided
   
