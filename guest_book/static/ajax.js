@@ -9,8 +9,8 @@ $(document).ready(function main () {
       page_place.setAttribute("value", 1);
       quantity_place = document.getElementById("quantity");
       quantity_place.setAttribute("value", data.quantity);
-      }
-    });
+      });
+    };
   
   // Taking entries (in single JSON) from server
   
