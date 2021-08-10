@@ -61,6 +61,7 @@ $(document).ready(function main () {
       } else {
       quantity = parseInt(quantity);
       page = parseInt(page)};
+    getConfig('quantity='+ quantity);
     let query = {"user": null, "quantity" : quantity, "page": page};
     getEntries (query);});
 

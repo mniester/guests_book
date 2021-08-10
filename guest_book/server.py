@@ -50,8 +50,14 @@ def config():
     
     '''Return default config to client'''
     
+    data = request.args
+    print(data['quantity'])
+    try:
+        quantity = request.args['quantity']
+    except KeyError:
+        quantity = app.config["ENTRIES_PER_PAGE"]
     with DB_access() as db:
-        output = {'max_page': get_max_page(db, app.config["ENTRIES_PER_PAGE"], name = None),
+        output = {'max_page': get_max_page(db, quantity, name = None),
                 'quantity': app.config["ENTRIES_PER_PAGE"]}
         output = jsonify(output)
         return output
