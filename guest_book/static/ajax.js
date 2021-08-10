@@ -2,12 +2,14 @@ $(document).ready(function main () {
   
   // get default number of pages and max page from server
   
-  $.getJSON('/default', null, function(data) {
-    page_place = document.getElementById("page");
-    page_place.setAttribute("max", data.max_page);
-    page_place.setAttribute("value", 1);
-    quantity_place = document.getElementById("quantity");
-    quantity_place.setAttribute("value", data.quantity);
+  function getConfig (quantity) {
+    $.getJSON('/config', quantity, function(data) {
+      page_place = document.getElementById("page");
+      page_place.setAttribute("max", data.max_page);
+      page_place.setAttribute("value", 1);
+      quantity_place = document.getElementById("quantity");
+      quantity_place.setAttribute("value", data.quantity);
+      }
     });
   
   // Taking entries (in single JSON) from server
@@ -27,6 +29,9 @@ $(document).ready(function main () {
     };
   
   // Taking default data - nr of entries and page
+  
+  getConfig(null);
+  
   // First app tries to take data from URL
   // if not - default number of pages and max page from server
   

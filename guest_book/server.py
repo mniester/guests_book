@@ -45,7 +45,7 @@ def full_entry(entry_id):
             abort(404)
 
 
-@app.route('/default', methods = ['GET'])
+@app.route('/config', methods = ['GET'])
 def config():
     
     '''Return default config to client'''
