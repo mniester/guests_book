@@ -51,7 +51,6 @@ def config():
     '''Return default config to client'''
     
     data = request.args
-    print(data['quantity'])
     try:
         quantity = request.args['quantity']
     except KeyError:

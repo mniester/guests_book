@@ -32,6 +32,10 @@ background-color: #e0e0e0;
 text-align: center;
 }
 
+.entry_text{
+font-family: "Ubuntu Thin"
+}
+
 .error{
 color: red;
 font-size: 0.8em;

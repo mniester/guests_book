@@ -24,7 +24,7 @@ $(document).ready(function main () {
     $(".entry").remove();
     for (let i = 0; i < response.user.length; i++) {
       insert = "<dt class = 'entry'> " + response.user[i] + " napisał(a) o " +
-      response.date[i] + " </dt> " + " <dd class = 'entry'><p> " + response.text[i] + " </p></dd>";
+      response.date[i] + " </dt> " + " <dd class = 'entry entry_text'><p> " + response.text[i] + " </p></dd>";
       $("#list").append(insert)};
     };
   
