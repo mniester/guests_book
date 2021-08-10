@@ -5,7 +5,6 @@
   "MAX_ENTRY_LEN": 1000, 
   "ENTRIES_PER_PAGE": 5,
   "CUT": 30,
-  "PAGE": 1,
   "DB": "test.db",
   "SECRET_KEY": "trolololo"
 }

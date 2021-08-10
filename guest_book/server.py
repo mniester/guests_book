@@ -75,6 +75,9 @@ def api():
             else:
                 status_code = '400'
         else:
+            if not data['quantity']:
+                data = dict(data)
+                data['quantity'] = app.config["ENTRIES_PER_PAGE"]
             offset = get_offset(data['quantity'], data['page'], app)
             result = db.get_entries(user = data['user'],
                                     quantity = data['quantity'],
