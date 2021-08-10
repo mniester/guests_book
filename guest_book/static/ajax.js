@@ -19,9 +19,10 @@ $(document).ready(function main () {
   // Cleaning page and putting new entries into it
   
   function printEntries(response) {
+    $(".entry").remove();
     for (let i = 0; i < response.user.length; i++) {
-      insert = "<dt> " + response.user[i] + " napisał(a) o " +
-      response.date[i] + " </dt> " + " <dd><p> " + response.text[i] + " </p></dd>";
+      insert = "<dt class = 'entry'> " + response.user[i] + " napisał(a) o " +
+      response.date[i] + " </dt> " + " <dd class = 'entry'><p> " + response.text[i] + " </p></dd>";
       $("#list").append(insert)};
     };
   
@@ -34,9 +35,9 @@ $(document).ready(function main () {
   if (queryString.length > 0) {
     let quantity = urlParams.get('quantity');
     let page = urlParams.get('page');
+    let firstQuery = {"user": null, "quantity" : null, "page": 1}
     } else {
     let firstQuery = {"user": null, "quantity" : $('#quantity').val(), "page": 1};
-    console.log(firstQuery);
     getEntries (firstQuery);
     };
   
