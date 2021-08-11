@@ -4,7 +4,7 @@
   "MAX_USER_LEN": 20,
   "MAX_ENTRY_LEN": 1000,
   "PAGE": 1, 
-  "ENTRIES_PER_PAGE": 5,
+  "ENTRIES_PER_PAGE": 3,
   "CUT": 30,
   "DB": "test.db",
   "SECRET_KEY": "trolololo"

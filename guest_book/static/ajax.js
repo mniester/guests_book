@@ -1,5 +1,7 @@
 $(document).ready(function main () {
   
+  var currentUser = null;
+  
   // get default number of pages and max page from server
   
   function getConfig (quantity) {
@@ -14,11 +16,11 @@ $(document).ready(function main () {
   
   // Refreshes page. Uses funtion below
 
-  function refreshPage () {
+  function refreshPage (user) {
     let quantity = $("#quantity").val();
     let page = $("#page").val();
     getConfig('quantity='+ quantity);
-    let query = {"user": null, "quantity" : quantity, "page": page};
+    let query = {"user": user, "quantity" : quantity, "page": page};
     getEntries (query)};
 
   // Taking entries (in single JSON) from server
@@ -51,7 +53,7 @@ $(document).ready(function main () {
     let page = urlParams.get('page');
     let firstQuery = {"user": null, "quantity" : null, "page": 1}
     } else {
-    let firstQuery = {"user": null, "quantity" : $('#quantity').val(), "page": 1};
+    let firstQuery = {"user": currentUser, "quantity" : $('#quantity').val(), "page": 1};
     getEntries (firstQuery);
     };
   
@@ -71,8 +73,10 @@ $(document).ready(function main () {
     let page = $("#page").val();
     if (quantity.length == 0 || page.length == 0) {
       noNumbersError();
-      } else { refreshPage() };
+      } else { refreshPage(currentUser) };
     });
+
+  // Adding new post to data base
 
   $('#add').click(function (event) {
     event.preventDefault();
@@ -83,7 +87,7 @@ $(document).ready(function main () {
     } else {
     json = {"user": user, "text":text};
     $.post("/api", json);
-    refreshPage()};
+    refreshPage(currentUser)};
     });
 
 });

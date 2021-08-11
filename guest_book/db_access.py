@@ -114,10 +114,14 @@ class DB_access:
         cmd = f'SELECT entry.id, entry.entry, user.name, entry.date FROM entry LEFT JOIN user ON entry.user = user.id '
         if nr:
             cmd += f'WHERE entry.id = {nr} '
-        elif user:
-            cmd += f'WHERE user.name LIKE "%{user}%" '
-        elif query:
-            cmd += f'WHERE entry.entry LIKE "%{query}%" '
+        elif user or query:
+            cmd += 'WHERE '
+            if user:
+                cmd += f'user.name LIKE "%{user}%" '
+                if query:
+                    cmd += "AND "
+            if query:
+                cmd += f'entry.entry LIKE "%{query}%" '
         cmd += 'ORDER BY date DESC '
         if quantity:
              cmd += f'LIMIT {quantity} '

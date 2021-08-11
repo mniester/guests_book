@@ -3,7 +3,7 @@ from flask import render_template, request, abort, make_response, jsonify
 
 from guest_book import app
 from guest_book.db_access import DB_access
-from guest_book.dry import db_operations, query_message, get_offset, get_max_page
+from guest_book.dry import get_offset, get_max_page
 
 
 @app.route('/', methods = ['GET'])
@@ -80,6 +80,7 @@ def api():
                 status_code = '201'
             else:
                 status_code = '400'
+            return status_code
         else:
             if not data['quantity']:
                 data = dict(data)
