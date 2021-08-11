@@ -76,7 +76,11 @@ $(document).ready(function main () {
     let text = $("#text").val();
     if (user.length == 0 || text.length == 0) {
     noEntryError();
-    } else {null};
+    } else {
+    json = {"user": user, "text":text};
+    // input = JSON.stringify(json); 
+    //console.log(input);
+    $.post("/api", json)};
     });
 
 });

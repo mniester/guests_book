@@ -72,6 +72,7 @@ def api():
         data = request.form
     else:
         data = request.args
+    print(data)
     with DB_access() as db:
         if request.method == 'POST':
             result = db.add_entry(user = data['user'], entry_text = data['text'])
