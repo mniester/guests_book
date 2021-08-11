@@ -12,6 +12,15 @@ $(document).ready(function main () {
       });
     };
   
+  // Refreshes page. Uses funtion below
+
+  function refreshPage () {
+    let quantity = $("#quantity").val();
+    let page = $("#page").val();
+    getConfig('quantity='+ quantity);
+    let query = {"user": null, "quantity" : quantity, "page": page};
+    getEntries (query)};
+
   // Taking entries (in single JSON) from server
   
   function getEntries (query) {
@@ -62,12 +71,7 @@ $(document).ready(function main () {
     let page = $("#page").val();
     if (quantity.length == 0 || page.length == 0) {
       noNumbersError();
-      } else {
-      quantity = parseInt(quantity);
-      page = parseInt(page);
-      getConfig('quantity='+ quantity);
-      let query = {"user": null, "quantity" : quantity, "page": page};
-      getEntries (query)};
+      } else { refreshPage() };
     });
 
   $('#add').click(function (event) {
@@ -78,9 +82,9 @@ $(document).ready(function main () {
     noEntryError();
     } else {
     json = {"user": user, "text":text};
-    // input = JSON.stringify(json); 
-    //console.log(input);
-    $.post("/api", json)};
+    $.post("/api", json);
+    let query = {"user": null, "quantity" : quantity, "page": page};
+    getEntries (query)};
     });
 
 });
