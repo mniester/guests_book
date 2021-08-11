@@ -50,13 +50,17 @@ $(document).ready(function main () {
   
   function noNumbersError() {alert('Proszę podać dane liczbowe')};
   
+  // Validation error - empty "user" input or "text" textarea
+
+  function noEntryError() {alert('Proszę podać nick użytkownika oraz post')};
+
   // Taking data from upper form - nr of entries and page
 
   $('#quantity_page').click(function (event) {
     event.preventDefault();
     let quantity = $("#quantity").val();
     let page = $("#page").val();
-    if (quantity.length == '' || page.length == '') {
+    if (quantity.length == 0 || page.length == 0) {
       noNumbersError();
       } else {
       quantity = parseInt(quantity);
@@ -70,7 +74,9 @@ $(document).ready(function main () {
     event.preventDefault();
     let user = $("#user").val();
     let text = $("#text").val();
-    console.log(user, text);
+    if (user.length == 0 || text.length == 0) {
+    noEntryError();
+    } else {null};
     });
 
 });
