@@ -59,7 +59,27 @@ def config():
         output = {'max_page': get_max_page(db, quantity, name = None),
                 'quantity': app.config["ENTRIES_PER_PAGE"]}
         output = jsonify(output)
-        return output
+    return output
+
+
+@app.route('/maxpage', methods = ['GET'])
+def max_page():
+    
+    '''Returns max possible page '''
+    
+    data = request.args
+    try:
+        quantity = request.args['quantity']
+    except KeyError:
+        quantity = app.config["ENTRIES_PER_PAGE"]
+    try:
+        user = request.args['user']
+    except KeyError:
+        user = None
+    with DB_access() as db:
+        output = {'max_page': get_max_page(db, quantity, name = user)}
+        output = jsonify(output)
+    return output
 
 
 @app.route('/api', methods = ['GET', 'POST'])

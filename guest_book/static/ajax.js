@@ -2,9 +2,9 @@ $(document).ready(function main () {
   
   var currentUser = null;
   
-  // get default number of pages and max page from server
+  // Gets default number of pages and max page from server. 
   
-  function getConfig (quantity) {
+  function getInitConfig (quantity) {
     $.getJSON('/config', quantity, function(data) {
       page_place = document.getElementById("page");
       page_place.setAttribute("max", data.max_page);
@@ -13,13 +13,22 @@ $(document).ready(function main () {
       quantity_place.setAttribute("value", data.quantity);
       });
     };
+   
+   // Gets max page from server
+   
+  function getMaxPage (user, quantity) {
+    query = {'user': user, 'quantity': quantity};
+    $.getJSON('/maxpage', query, function(data) {
+    page_place.setAttribute("max", data.max_page);
+    page_place.setAttribute("value", 1)});
+    };
   
   // Refreshes page. Uses funtion below
 
   function refreshPage (user) {
     let quantity = $("#quantity").val();
     let page = $("#page").val();
-    getConfig('quantity='+ quantity);
+    getMaxPage(user, quantity);
     let query = {"user": user, "quantity" : quantity, "page": page};
     getEntries (query)};
 
@@ -39,10 +48,6 @@ $(document).ready(function main () {
       $("#list").append(insert)};
     };
   
-  // Taking default data - nr of entries and page
-  
-  getConfig(null);
-  
   // First app tries to take data from URL
   // if not - default number of pages and max page from server
   
@@ -56,6 +61,10 @@ $(document).ready(function main () {
     let firstQuery = {"user": currentUser, "quantity" : $('#quantity').val(), "page": 1};
     getEntries (firstQuery);
     };
+  
+  // Taking default data - nr of entries and page
+  
+  getInitConfig(null);
   
   // Validation error - no proper numeric data provided
   
