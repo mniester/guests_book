@@ -50,7 +50,7 @@ $(document).ready(function main () {
   
   function noNumbersError() {alert('Proszę podać dane liczbowe')};
   
-  // Taking data from form - nr of entries and page
+  // Taking data from upper form - nr of entries and page
 
   $('#quantity_page').click(function (event) {
     event.preventDefault();
@@ -63,6 +63,14 @@ $(document).ready(function main () {
       page = parseInt(page)};
     getConfig('quantity='+ quantity);
     let query = {"user": null, "quantity" : quantity, "page": page};
-    getEntries (query);});
+    getEntries (query);
+    });
+
+  $('#add').click(function (event) {
+    event.preventDefault();
+    let user = $("#user").val();
+    let text = $("#text").val();
+    console.log(user, text);
+    });
 
 });

@@ -28,9 +28,10 @@
     </form>
 
     <h1> Wpisy: </h1>
+    
     <dl id ="list" ></dl>
 
-     <form action="/" method="get">
+     <form action =  "/api">
       <p><div>
         <p><label for="user">Użytkownik: </label></p>
         <input type="text" id="user" maxlength="{{ max_user_len }}" size="{{ max_user_len }}" name="user" 
@@ -42,9 +43,8 @@
         cols="70" maxlength="{{ max_entry_len }}"
         placeholder = "Max. {{ max_entry_len }} znaków" required></textarea>
       </div>
-        <input type="submit" name="add" value="Dodaj" formaction="/" formmethod = 'post'>
-        <input type="submit" name="query" value="Szukaj">
+        <button id="add" name="entryform" value = "add" type = "submit" formmethod = "post">Dodaj</button>
+        <button id="query" name="entryform" value = "query" type = "submit" formmethod = "get">Szukaj</button>
     </form>
-  
   </body>
 </html>

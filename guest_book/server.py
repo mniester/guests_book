@@ -69,7 +69,7 @@ def api():
     and return queries (using get HTTP method)'''
 
     if request.method == 'POST':
-        data = request.get_json(force=True)
+        data = request.form
     else:
         data = request.args
     with DB_access() as db:
