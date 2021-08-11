@@ -60,10 +60,10 @@ $(document).ready(function main () {
       noNumbersError();
       } else {
       quantity = parseInt(quantity);
-      page = parseInt(page)};
-    getConfig('quantity='+ quantity);
-    let query = {"user": null, "quantity" : quantity, "page": page};
-    getEntries (query);
+      page = parseInt(page);
+      getConfig('quantity='+ quantity);
+      let query = {"user": null, "quantity" : quantity, "page": page};
+      getEntries (query)};
     });
 
   $('#add').click(function (event) {
