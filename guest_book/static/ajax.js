@@ -83,8 +83,7 @@ $(document).ready(function main () {
     } else {
     json = {"user": user, "text":text};
     $.post("/api", json);
-    let query = {"user": null, "quantity" : quantity, "page": page};
-    getEntries (query)};
+    refreshPage()};
     });
 
 });
