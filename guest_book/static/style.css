@@ -15,14 +15,8 @@ h1 {
   text-align: center;
 }
 
-a:link {
+.entryuser {
   color: #1f7a1f;
-  background-color: transparent;
-  text-decoration: none;
-}
-
-a:visited {
-  color: #ffff00;
   background-color: transparent;
   text-decoration: none;
 }

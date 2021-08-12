@@ -46,7 +46,7 @@ $(document).ready(function main () {
       
       // First creates user name with hyperlink
       insert = "<dt class = 'entry'> " + 
-      "<a href=/user/" + response.user[i] + ">" + response.user[i] + "</a> napisał(a) o " +
+      "<button class = 'entryuser'>" + response.user[i] + "</button> napisał(a) o " +
       
       // Adds date
       response.date[i] + " </dt> " + 
@@ -67,7 +67,10 @@ $(document).ready(function main () {
   if (queryString.length > 0) {
     let quantity = urlParams.get('quantity');
     let page = urlParams.get('page');
-    let firstQuery = {"user": null, "quantity" : null, "page": 1}
+    console.log(quantity, page);
+    let firstQuery = {"user": currentUser, "quantity" : quantity, "page": page};
+    console.log(firstQuery)
+    getEntries (firstQuery);
     } else {
     let firstQuery = {"user": currentUser, "quantity" : $('#quantity').val(), "page": 1};
     getEntries (firstQuery);
