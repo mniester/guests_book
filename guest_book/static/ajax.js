@@ -43,8 +43,19 @@ $(document).ready(function main () {
   function printEntries(response) {
     $(".entry").remove();
     for (let i = 0; i < response.user.length; i++) {
-      insert = "<dt class = 'entry'> " + response.user[i] + " napisał(a) o " +
-      response.date[i] + " </dt> " + " <dd class = 'entry entry_text'><p> " + response.text[i] + " </p></dd>";
+      
+      // First creates user name with hyperlink
+      insert = "<dt class = 'entry'> " + 
+      "<a href = " + response.user[i] + ">" + response.user[i] + "</a> napisał(a) o " +
+      
+      // Adds date
+      response.date[i] +
+      
+      // Shows snippet of entry with hyperlink 
+      " </dt> " + " <dd class = 'entry entry_text'><p> " + 
+      response.text[i] + " </p></dd>";
+      
+      // Adds entry to list
       $("#list").append(insert)};
     };
   
