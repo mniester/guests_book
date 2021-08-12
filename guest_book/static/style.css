@@ -33,10 +33,5 @@ text-align: center;
 }
 
 .entry_text{
-font-family: "Ubuntu Thin"
-}
-
-.error{
-color: red;
-font-size: 0.8em;
+font-family: "Ubuntu Thin";
 }

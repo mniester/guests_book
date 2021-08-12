@@ -110,8 +110,9 @@ def api():
                                     quantity = data['quantity'],
                                     offset = offset)
             if result:
-                output = {'user': [], 'date': [], 'text': []}
+                output = {'entryid': [],'user': [], 'date': [], 'text': []}
                 for entry in result:
+                    output['entryid'].append(entry.id)
                     output['user'].append(entry.user)
                     output['date'].append(entry.date)
                     output['text'].append(entry.get_text(app.config['CUT']))
