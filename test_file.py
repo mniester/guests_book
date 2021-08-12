@@ -91,25 +91,3 @@ def test_add_entry():
             result = db.get_entries()
             for r in result:
                 assert r.text == 'Odpowiedni wpis testowy'
-
-
-def test_api():
-
-    '''Tests API route'''
-
-    api_adress = app_adress + 'api'
-    for generator, code in generators_codes:
-        for entry in generator:
-            try:
-                entry_in = {'user': entry[0],
-                           'text': entry[1],
-                           'mode': 'in'}
-                response = requests.post(api_adress, json = entry_in)
-                assert response.status_code == code
-                if code == 201:
-                    entry_out = {'user': entry_in['user'],
-                                'quantity': 1,
-                                'mode': 'out'}
-                    response = requests.post(api_adress, json = entry_out)
-            except ConnectionError:
-                assert False
