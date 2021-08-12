@@ -15,8 +15,15 @@ h1 {
   text-align: center;
 }
 
-.entryuser {
+
+a:link {
   color: #1f7a1f;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #ffff00;
   background-color: transparent;
   text-decoration: none;
 }
@@ -26,6 +33,6 @@ background-color: #e0e0e0;
 text-align: center;
 }
 
-.entry_text{
+.entrytext{
 font-family: "Ubuntu Thin";
 }

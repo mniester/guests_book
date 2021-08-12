@@ -110,28 +110,33 @@ class DB_access:
         query = None, quantity = None, offset = None):
 
         '''Select entries from database'''
-
+        
         cmd = f'SELECT entry.id, entry.entry, user.name, entry.date FROM entry LEFT JOIN user ON entry.user = user.id '
         if nr:
-            cmd += f'WHERE entry.id = {nr} '
-        elif user or query:
-            cmd += 'WHERE '
-            if user:
-                cmd += f'user.name LIKE "%{user}%" '
+            cmd += f'WHERE entry.id = {nr} ;'
+            source = DB_access.cursor.execute(cmd)
+            for s in source:
+                entry = Entry(s)
+                yield entry
+        else:
+            if user or query:
+                cmd += 'WHERE '
+                if user:
+                    cmd += f'user.name LIKE "%{user}%" '
+                    if query:
+                        cmd += "AND "
                 if query:
-                    cmd += "AND "
-            if query:
-                cmd += f'entry.entry LIKE "%{query}%" '
-        cmd += 'ORDER BY date DESC '
-        if quantity:
-             cmd += f'LIMIT {quantity} '
-        if offset and offset < DB_access.check_entries(user):
-            cmd += f'OFFSET {offset} '
-        cmd += ';'
-        source = DB_access.cursor.execute(cmd)
-        for s in source:
-            entry = Entry(s)
-            yield entry
+                    cmd += f'entry.entry LIKE "%{query}%" '
+            cmd += 'ORDER BY date DESC '
+            if quantity:
+                cmd += f'LIMIT {quantity} '
+            if offset and offset < DB_access.check_entries(user):
+                cmd += f'OFFSET {offset} '
+            cmd += ';'
+            source = DB_access.cursor.execute(cmd)
+            for s in source:
+                entry = Entry(s)
+                yield entry
 
     @staticmethod
     def __exit__(exc_type, exc_value, exc_traceback):

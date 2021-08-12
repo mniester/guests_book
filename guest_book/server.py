@@ -20,8 +20,8 @@ def index():
                             title = app.config['TITLE'])
 
 
-@app.route('/entry/<entry_id>')
-def full_entry(entry_id):
+@app.route('/entry/<entry_id>', methods = ['GET'])
+def entry(entry_id):
 
     '''Returns one, chosen entry'''
     
@@ -29,20 +29,13 @@ def full_entry(entry_id):
         entry_id = int(entry_id)
     except ValueError:
         abort(404)
-    
+
     with DB_access() as db:
         entry = list(db.get_entries(nr = entry_id))
-        if entry:
-            entry = entry[0]
-            status_code = 200
-            return render_template('entry.html', 
-                title = app.config["TITLE"], 
-                user = entry.user, 
-                date = entry.date,
-                quantity = app.config["ENTRIES"],
-                text = entry.text), status_code
-        else:
-            abort(404)
+    if entry:
+        return entry[0].text
+    else:
+        return "wstawić komunikat"
 
 
 @app.route('/config', methods = ['GET'])
@@ -100,7 +93,7 @@ def api():
                 status_code = '201'
             else:
                 status_code = '400'
-            return status_code
+            output = make_response('', status_code)
         else:
             if not data['quantity']:
                 data = dict(data)
@@ -120,9 +113,8 @@ def api():
                 return output
             else:
                 status_code = '400'
-        response = make_response('', status_code)
-        return response
-
+        output = make_response('', status_code)
+    return output
 
 @app.errorhandler(404)
 def page_not_found(e):

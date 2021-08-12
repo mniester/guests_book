@@ -44,9 +44,9 @@ $(document).ready(function main () {
     $(".entry").remove();
     for (let i = 0; i < response.user.length; i++) {
       
-      // First creates user name with hyperlink
-      insert = "<dt class = 'entry'> " + 
-      "<button class = 'entryuser'>" + response.user[i] + "</button> napisał(a) o " +
+      // First creates user name
+      insert = "<dt class = 'entry entry'> " + 
+      '<a href=/user/' + response.user[i] + ' class = "entryuser" name = "entryuser">' + response.user[i] + "</a> napisał(a) o " +
       
       // Adds date
       response.date[i] + " </dt> " + 
@@ -67,9 +67,7 @@ $(document).ready(function main () {
   if (queryString.length > 0) {
     let quantity = urlParams.get('quantity');
     let page = urlParams.get('page');
-    console.log(quantity, page);
     let firstQuery = {"user": currentUser, "quantity" : quantity, "page": page};
-    console.log(firstQuery)
     getEntries (firstQuery);
     } else {
     let firstQuery = {"user": currentUser, "quantity" : $('#quantity').val(), "page": 1};
@@ -112,5 +110,8 @@ $(document).ready(function main () {
     $.post("/api", json);
     refreshPage(currentUser)};
     });
+    
+  userButton = $("entryuser");
+  console.log(userButton);
 
 });
