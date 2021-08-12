@@ -46,13 +46,13 @@ $(document).ready(function main () {
       
       // First creates user name with hyperlink
       insert = "<dt class = 'entry'> " + 
-      "<a href = /user/" + response.user[i] + ">" + response.user[i] + "</a> napisał(a) o " +
+      "<a href=/user/" + response.user[i] + ">" + response.user[i] + "</a> napisał(a) o " +
       
       // Adds date
       response.date[i] + " </dt> " + 
       
       // Shows snippet of entry with hyperlink 
-      " <dd class = 'entry entry_text'><p><a href= " + response.entryid[i] + " >" +
+      " <dd class = 'entry entry_text'><p><a href = /entry/" + response.entryid[i] + " >" +
       response.text[i] + " </p></dd>";
       
       // Adds entry to list
