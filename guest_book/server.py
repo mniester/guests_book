@@ -35,7 +35,7 @@ def entry(entry_id):
     if entry:
         return entry[0].text
     else:
-        return "wstawić komunikat"
+        abort(404)
 
 
 @app.route('/config', methods = ['GET'])
