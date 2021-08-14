@@ -31,7 +31,7 @@ $(document).ready(function main () {
     getMaxPage(user, quantity);
     let query = {"user": user, "quantity" : quantity, "page": page};
     getEntries (query)};
-
+    
   // Taking entries (in single JSON) from server
   
   function getEntries (query) {
@@ -117,8 +117,17 @@ $(document).ready(function main () {
       event.preventDefault();
       //$(this).text("It works!");
       currentUser = $(this).text();
+      $('#reset').text('Pokaż wpisy wszystkich użytkowników');
       refreshPage(currentUser);
     });
-     
+    
+    // Reset 
 
+    $(document).on('click','#resrt', function(event){
+      event.preventDefault();
+      //$(this).text("It works!");
+      currentUser = null;
+      $('#reset').text('Pokaż wpisy wszystkich użytkowników');
+      refreshPage(currentUser);
+    });
 });
