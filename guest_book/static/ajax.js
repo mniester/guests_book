@@ -46,7 +46,7 @@ $(document).ready(function main () {
       
       // First creates user name
       insert = "<dt class = 'entry entry'> " + 
-      '<a href=/user/' + response.user[i] + ' class = "entryuser" name = "entryuser">' + response.user[i] + "</a> napisał(a) o " +
+      '<a href=/user/' + response.user[i]  +  ' class = "entryuser" name = "entryuser">' + response.user[i] + "</a> napisał(a) o " +
       
       // Adds date
       response.date[i] + " </dt> " + 
@@ -111,7 +111,14 @@ $(document).ready(function main () {
     refreshPage(currentUser)};
     });
     
-  userButton = $("entryuser");
-  console.log(userButton);
+    // Setting user name as current user and quering entries
+
+    $(document).on('click','.entryuser', function(event){
+      event.preventDefault();
+      //$(this).text("It works!");
+      currentUser = $(this).text();
+      refreshPage(currentUser);
+    });
+     
 
 });
