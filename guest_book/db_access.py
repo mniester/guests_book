@@ -106,8 +106,8 @@ class DB_access:
         return nr
 
     @staticmethod
-    def get_entries(nr = None, user = None, 
-        query = None, quantity = None, offset = None):
+    def get_entries(nr = None, user = None, query = None, 
+        quantity = None, offset = None, exact = False):
 
         '''Select entries from database'''
         
@@ -122,7 +122,10 @@ class DB_access:
             if user or query:
                 cmd += 'WHERE '
                 if user:
-                    cmd += f'user.name LIKE "%{user}%" '
+                    if exact:
+                        cmd += f'user.name = "{user}" '
+                    else:
+                        cmd += f'user.name LIKE "%{user}%" '
                     if query:
                         cmd += "AND "
                 if query:
