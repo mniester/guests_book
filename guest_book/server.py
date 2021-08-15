@@ -17,6 +17,7 @@ def index():
                             entries_per_page = app.config["ENTRIES_PER_PAGE"],
                             max_entry_len = app.config["MAX_ENTRY_LEN"],
                             max_user_len = app.config["MAX_USER_LEN"],
+                            button = app.config['BUTTON'],
                             title = app.config['TITLE'])
 
 
@@ -52,7 +53,8 @@ def config():
         output = {'max_page': get_max_page(db, quantity, name = None),
                 'quantity': app.config["ENTRIES_PER_PAGE"],
                 'max_user_nick_len': app.config["MAX_USER_LEN"],
-                'max_entry_len': app.config["MAX_ENTRY_LEN"]}
+                'max_entry_len': app.config["MAX_ENTRY_LEN"],
+                "reset_button": app.config["BUTTON"]}
         output = jsonify(output)
     return output
 
@@ -97,14 +99,19 @@ def api():
                 status_code = '400'
             output = make_response('', status_code)
         else:
+            data = dict(data)
             try:
                 data['exact']
             except KeyError:
-                data = dict(data)
                 data['exact'] = False
-            if not data['quantity']:
-                data = dict(data)
+            try:
+                data['quantity']
+            except KeyError:
                 data['quantity'] = app.config["ENTRIES_PER_PAGE"]
+            try:
+                data['page']
+            except KeyError:
+                data['page'] = 1
             offset = get_offset(data['quantity'], data['page'], app)
             result = db.get_entries(user = data['user'],
                                     quantity = data['quantity'],

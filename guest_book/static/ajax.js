@@ -3,19 +3,20 @@ $(document).ready(function main () {
   var currentUser = null;
   var maxUserNickLength = null;
   var maxEntryLength = null;
+  var page = document.getElementById("page");
+  var resetButton = null;
   
   // Gets default number of pages and max page from server. 
   
-  function getInitConfig (quantity) {
-    $.getJSON('/config', quantity, function(data) {
-      console.log(data);
-      let page_place = document.getElementById("page");
-      page_place.setAttribute("max", data.max_page);
-      page_place.setAttribute("value", 1);
-      let quantity_place = document.getElementById("quantity");
-      quantity_place.setAttribute("value", data.quantity);
+  function getInitConfig () {
+    $.getJSON('/config', null, function(data) {
+      page.setAttribute("max", data.max_page);
+      page.setAttribute("value", 1);
+      let quantity = document.getElementById("quantity");
+      quantity.setAttribute("value", data.quantity);
       maxUserNickLength = data.max_user_nick_len;
       maxEntryLength = data.max_entry_len;
+      resetButton = data.reset_button
       });
     };
    
@@ -23,10 +24,9 @@ $(document).ready(function main () {
    
   function getMaxPage (user, quantity) {
     query = {'user': user, 'quantity': quantity};
-    let page_place = document.getElementById("page");
     $.getJSON('/maxpage', query, function(data) {
-    page_place.setAttribute("max", data.max_page);
-    page_place.setAttribute("value", 1)});
+    page.setAttribute("max", data.max_page);
+    page.setAttribute("value", 1)});
     };
   
   // Refreshes page. Uses funtion below
@@ -67,7 +67,11 @@ $(document).ready(function main () {
       // Adds entry to list
       $("#list").append(insert)};
     };
+
+  // Taking default data - nr of entries and page
   
+  getInitConfig(null);
+
   // First app tries to take data from URL
   // if not - default number of pages and max page from server
   
@@ -86,13 +90,10 @@ $(document).ready(function main () {
     let firstQuery = {"user": user, "quantity" : quantity, "page": page, "exact": true};
     getEntries (firstQuery);
   } else {
-    let urlQuery = {"user": currentUser, "quantity" : $('#quantity').val(), "page": 1, "exact": true};
+    let quantity = $('#quantity').val();
+    let urlQuery = {"user": currentUser, "page": 1};
     getEntries (urlQuery);
     };
-  
-  // Taking default data - nr of entries and page
-  
-  getInitConfig(null);
   
   // Validation error - no proper numeric data provided
   
@@ -139,22 +140,42 @@ $(document).ready(function main () {
       $.post("/api", json);
       refreshPage(currentUser)};
     });
-    
+
+    // Searching database
+  
+  $('#query').click(function (event) {
+    event.preventDefault();
+    let user = $("#user").val();
+    let text = $("#text").val();
+    if (user.length == 0 && text.length == 0) {
+      noEntryError();
+  } else if ( user.length > maxUserNickLength) {
+      tooLongUserNick();
+  } else if ( text.length > maxEntryLength) {
+      tooLongText();
+  } else {
+    query = {"user": user, "query":text};
+    console.log(query);
+    getEntries(query)}
+  });
+
     // Setting user name as current user and quering entries
 
-    $(document).on('click','.entryuser', function(event){
-      event.preventDefault();
-      currentUser = $(this).text();
-      $('#reset').text('Pokaż wpisy wszystkich użytkowników');
-      refreshPage(currentUser, true);
+  $(document).on('click','.entryuser', function(event){
+    event.preventDefault();
+    currentUser = $(this).text();
+    $('#reset').text('Pokaż wpisy wszystkich użytkowników');
+    page.setAttribute("value", 1);
+    refreshPage(currentUser, true);
     });
     
     // Check entries of all users
 
-    $(document).on('click','#reset', function(event){
-      event.preventDefault();
-      currentUser = null;
-      $('#reset').text('Sprawdź nowe');
-      refreshPage(currentUser);
-    });
+  $(document).on('click','#reset', function(event){
+    event.preventDefault();
+    currentUser = null;
+    $('#reset').text(resetButton);
+    page.setAttribute("value", 1);
+    refreshPage(currentUser);
+  });
 });

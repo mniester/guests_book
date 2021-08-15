@@ -119,17 +119,17 @@ class DB_access:
                 entry = Entry(s)
                 yield entry
         else:
-            if user or query:
+            if user:
                 cmd += 'WHERE '
-                if user:
-                    if exact:
-                        cmd += f'user.name = "{user}" '
-                    else:
-                        cmd += f'user.name LIKE "%{user}%" '
-                    if query:
-                        cmd += "AND "
+                #if user:
+                if exact:
+                    cmd += f'user.name = "{user}" '
+                else:
+                    cmd += f'user.name LIKE "%{user}%" '
                 if query:
-                    cmd += f'entry.entry LIKE "%{query}%" '
+                        cmd += "AND "
+            if query:
+                cmd += f'entry.entry LIKE "%{query}%" '
             cmd += 'ORDER BY date DESC '
             if quantity:
                 cmd += f'LIMIT {quantity} '

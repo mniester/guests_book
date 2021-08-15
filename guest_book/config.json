@@ -7,5 +7,6 @@
   "ENTRIES_PER_PAGE": 3,
   "CUT": 30,
   "DB": "test.db",
+  "BUTTON": "Pokazuje wszystkich użytkowników",
   "SECRET_KEY": "trolololo"
 }
