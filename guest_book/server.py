@@ -77,8 +77,12 @@ def max_page():
         user = request.args['user']
     except KeyError:
         user = None
+    try:
+        text_piece = request.args['text']
+    except KeyError:
+        text_piece = None
     with DB_access() as db:
-        output = {'max_page': get_max_page(db, quantity, name = user)}
+        output = {'max_page': get_max_page(db, quantity, name = user, text_piece = text_piece)}
         output = jsonify(output)
     return output
 
@@ -93,7 +97,6 @@ def api():
         data = request.form
     else:
         data = request.args
-    print(data)
     with DB_access() as db:
         if request.method == 'POST':
             result = db.add_entry(user = data['user'], entry_text = data['text'])
@@ -115,16 +118,16 @@ def api():
             try:
                 data['page']
             except KeyError:
-                data['page'] = 1
+                data['page'] = app.config['PAGE']
             try:
-                data['query']
+                data['text']
             except KeyError:
-                data['query'] = None
+                data['text'] = None
             offset = get_offset(data['quantity'], data['page'], app)
             result = db.get_entries(user = data['user'],
                                     quantity = data['quantity'],
                                     exact = data['exact'],
-                                    query = data['query'],
+                                    query = data['text'],
                                     offset = offset)
             if result:
                 output = {'entryid': [],'user': [], 'date': [], 'text': []}

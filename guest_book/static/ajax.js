@@ -1,6 +1,7 @@
 $(document).ready(function main () {
   
   var currentUser = null;
+  var currentText = null;
   var maxUserNickLength = null;
   var maxEntryLength = null;
   var page = document.getElementById("page");
@@ -22,21 +23,22 @@ $(document).ready(function main () {
    
    // Gets max page from server
    
-  function getMaxPage (user, quantity) {
-    query = {'user': user, 'quantity': quantity};
+  function getMaxPage (user, text, quantity) {
+    query = {'user': user, 'text': text, 'quantity': quantity};
+    console.log(query);
     $.getJSON('/maxpage', query, function(data) {
     page.setAttribute("max", data.max_page);
     page.setAttribute("value", 1)});
     };
   
-  // Refreshes page. Uses funtion below
+  // Refreshes page. Uses function below
   // exact is boolean shows whether query 
 
-  function refreshPage (user, exact) {
+  function refreshPage (user, text, exact) {
     let quantity = $("#quantity").val();
     let page = $("#page").val();
-    getMaxPage(user, quantity);
-    let query = {"user": user, "quantity" : quantity, "page": page};
+    getMaxPage(user, text, quantity);
+    let query = {"user": user, 'text': text, "quantity" : quantity, "page": page};
     if (exact === true) {
       query.exact = true};
     getEntries (query)};
@@ -44,7 +46,7 @@ $(document).ready(function main () {
   // Taking entries (in single JSON) from server
   
   function getEntries (query) {
-    $.getJSON("/api", query, function (data) { printEntries(data) });
+    $.getJSON("/api", query, function (data) {printEntries(data)});
     };
   
   // Cleaning page and putting new entries into it
@@ -81,17 +83,20 @@ $(document).ready(function main () {
     let user = urlParams.get('user');
     if (user === null) {
       user = currentUser};
+    let text = urlParams.get('text');
+    if (text === null) {
+      text = currentText};
     let quantity = urlParams.get('quantity');
     if (quantity === null) {
       quantity = $("#quantity").val()};
     let page = urlParams.get('page');
     if (page = null) {
       page = $("#page").val()};
-    let firstQuery = {"user": user, "quantity" : quantity, "page": page, "exact": true};
+    let firstQuery = {"user": user, "text": text, "quantity" : quantity, "page": page, "exact": true};
     getEntries (firstQuery);
   } else {
     let quantity = $('#quantity').val();
-    let urlQuery = {"user": currentUser, "page": 1};
+    let urlQuery = {"user": currentUser, 'text': currentText, "page": 1};
     getEntries (urlQuery);
     };
   
@@ -120,7 +125,7 @@ $(document).ready(function main () {
     if (quantity.length == 0 || page.length == 0) {
       noNumbersError();
     } else {
-      refreshPage(currentUser) };
+      refreshPage(currentUser, currentText) };
     });
 
   // Adding new post to data base
@@ -138,7 +143,7 @@ $(document).ready(function main () {
     } else {
       json = {"user": user, "text":text};
       $.post("/api", json);
-      refreshPage(currentUser)};
+      refreshPage(currentUser, currentText)};
     });
 
     // Searching database
@@ -155,9 +160,11 @@ $(document).ready(function main () {
       tooLongText();
   } else {
     let quantity = $('#quantity').val();
-    query = {"quantity": quantity, "user": user, "query":text};
+    currentText = text;
+    getMaxPage (user, text, quantity);
+    query = {"quantity": quantity, "user": user, "text":text};
     getEntries(query)};
-    $('#reset').text('Pokaż wpisy wszystkich użytkowników');
+    $('#reset').text('Pokaż pozostałe wpisy');
   });
 
     // Setting user name as current user and quering entries
@@ -165,8 +172,8 @@ $(document).ready(function main () {
   $(document).on('click','.entryuser', function(event){
     event.preventDefault();
     currentUser = $(this).text();
-    $('#reset').text('Pokaż wpisy wszystkich użytkowników');
-    refreshPage(currentUser, true);
+    $('#reset').text('Pokaż pozostałe wpisy');
+    refreshPage(currentUser, currentText, true);
     });
     
     // Check entries of all users
@@ -174,7 +181,8 @@ $(document).ready(function main () {
   $(document).on('click','#reset', function(event){
     event.preventDefault();
     currentUser = null;
+    currentText = null;
     $('#reset').text(resetButton);
-    refreshPage(currentUser);
+    refreshPage(currentUser, currentText);
   });
 });

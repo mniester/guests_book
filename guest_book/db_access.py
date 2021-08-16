@@ -87,11 +87,13 @@ class DB_access:
             return False
 
     @staticmethod
-    def count_entries(user = None):
+    def count_entries(user = None, text_piece = None):
 
         '''Check how many entries are in the base'''
 
-        cmd = 'SELECT COUNT(id) FROM entry ' 
+        cmd = 'SELECT COUNT (id) FROM entry '
+        if user or text_piece:
+            cmd += 'WHERE '
         if user:
             users_ids = DB_access.check_user(user, exact = False)
             if users_ids:
@@ -99,7 +101,11 @@ class DB_access:
                     users_ids = str(users_ids)
                 else:
                     users_ids = '(' + str(users_ids) + ')'
-                cmd += f'WHERE user in {users_ids} '
+                cmd += f' user in {users_ids} '
+            if text_piece:
+                cmd += 'AND '
+        if text_piece:
+            cmd += f' entry LIKE "%{text_piece}%" '
         cmd += ';'
         nr = DB_access.cursor.execute(cmd)
         nr = list(nr)[0][0]
@@ -133,9 +139,8 @@ class DB_access:
             cmd += 'ORDER BY date DESC '
             if quantity:
                 cmd += f'LIMIT {quantity} '
-            if offset and offset < DB_access.check_entries(user):
+            if offset and offset < DB_access.count_entries(user):
                 cmd += f'OFFSET {offset} '
-            print(cmd)
             cmd += ';'
             source = DB_access.cursor.execute(cmd)
             for s in source:
