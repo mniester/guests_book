@@ -87,7 +87,7 @@ class DB_access:
             return False
 
     @staticmethod
-    def check_entries(user = None):
+    def count_entries(user = None):
 
         '''Check how many entries are in the base'''
 
@@ -119,9 +119,9 @@ class DB_access:
                 entry = Entry(s)
                 yield entry
         else:
-            if user:
+            if user or query:
                 cmd += 'WHERE '
-                #if user:
+            if user:
                 if exact:
                     cmd += f'user.name = "{user}" '
                 else:
@@ -135,6 +135,7 @@ class DB_access:
                 cmd += f'LIMIT {quantity} '
             if offset and offset < DB_access.check_entries(user):
                 cmd += f'OFFSET {offset} '
+            print(cmd)
             cmd += ';'
             source = DB_access.cursor.execute(cmd)
             for s in source:

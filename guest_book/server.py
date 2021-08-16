@@ -32,9 +32,13 @@ def entry(entry_id):
         abort(404)
 
     with DB_access() as db:
-        entry = list(db.get_entries(nr = entry_id))
+        entry = list(db.get_entries(nr = entry_id))[0]
     if entry:
-        return entry[0].text
+        return render_template('entry.html',
+                                title = app.config['TITLE'],
+                                user = entry.user,
+                                date = entry.date,
+                                text = entry.text)
     else:
         abort(404)
 
@@ -112,10 +116,15 @@ def api():
                 data['page']
             except KeyError:
                 data['page'] = 1
+            try:
+                data['query']
+            except KeyError:
+                data['query'] = None
             offset = get_offset(data['quantity'], data['page'], app)
             result = db.get_entries(user = data['user'],
                                     quantity = data['quantity'],
                                     exact = data['exact'],
+                                    query = data['query'],
                                     offset = offset)
             if result:
                 output = {'entryid': [],'user': [], 'date': [], 'text': []}

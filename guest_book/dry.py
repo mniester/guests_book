@@ -1,11 +1,10 @@
-def get_max_page(db, quantity, name = None):
+def get_max_page(db, quantity,  name = None):
 
     '''Returns number of highest page to shown on main webpage'''
-
     if name:
-        all_entries_nr = db.check_entries(name)
+        all_entries_nr = db.count_entries(name)
     else:
-        all_entries_nr = db.check_entries()
+        all_entries_nr = db.count_entries()
     if all_entries_nr:
         quantity = int(quantity)
         full_pages = all_entries_nr // quantity

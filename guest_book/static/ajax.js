@@ -61,7 +61,7 @@ $(document).ready(function main () {
       response.date[i] + " </dt> " + 
       
       // Shows snippet of entry with hyperlink 
-      " <dd class = 'entry entry_text'><p><a href = /entry/" + response.entryid[i] + " >" +
+      " <dd class = 'entry entry_text'><p><a href = /entry/" + response.entryid[i] + " target='_blank'>" +
       response.text[i] + " </p></dd>";
       
       // Adds entry to list
@@ -154,9 +154,10 @@ $(document).ready(function main () {
   } else if ( text.length > maxEntryLength) {
       tooLongText();
   } else {
-    query = {"user": user, "query":text};
-    console.log(query);
-    getEntries(query)}
+    let quantity = $('#quantity').val();
+    query = {"quantity": quantity, "user": user, "query":text};
+    getEntries(query)};
+    $('#reset').text('Pokaż wpisy wszystkich użytkowników');
   });
 
     // Setting user name as current user and quering entries
@@ -165,7 +166,6 @@ $(document).ready(function main () {
     event.preventDefault();
     currentUser = $(this).text();
     $('#reset').text('Pokaż wpisy wszystkich użytkowników');
-    page.setAttribute("value", 1);
     refreshPage(currentUser, true);
     });
     
@@ -175,7 +175,6 @@ $(document).ready(function main () {
     event.preventDefault();
     currentUser = null;
     $('#reset').text(resetButton);
-    page.setAttribute("value", 1);
     refreshPage(currentUser);
   });
 });
