@@ -8,6 +8,7 @@ if __name__ == '__main__':
     with DB_access() as db:
 
         # I have saved table creation commands 
+        # config is taken from JSON
 
         db.cursor.execute(f'''CREATE TABLE user
         (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
