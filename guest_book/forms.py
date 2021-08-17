@@ -20,5 +20,5 @@ class Entry(FlaskForm):
         max = max_user_len, message = user_message)])
     text = StringField('Wpis', validators = [Length(min = 1,
         max = max_entry_len,  message = entry_message)], widget=TextArea())
-    write = SubmitField('Zapisz')
-    query = SubmitField('Szukaj')
+    write = SubmitField('Zapisz wpis')
+    query = SubmitField('Szukaj wpisu')
